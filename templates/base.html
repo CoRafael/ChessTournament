@@ -66,10 +66,28 @@
                 <li class="page-scroll">
                     <a href="#enter_results">Enter Results</a>
                 </li>
-                <li class="page-scroll">
-                    <a href="#login">Login</a>
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" href="#" data-toggle="dropdown">Login In <strong
+                            class="caret"></strong></a>
+
+                    <div class="dropdown-menu" style="padding: 25px; padding-bottom: 5px;">
+                        <form method="post" action="login" accept-charset="UTF-8">
+                            <h5>Username</h5>
+                            <input style="margin-bottom: 15px;" type="text" placeholder="Username" id="username"
+                                   name="username">
+                            <h5>Password</h5>
+                            <input style="margin-bottom: 15px;" type="password" placeholder="Password" id="password"
+                                   name="password">
+                            <input class="btn btn-primary center-block" type="submit" id="sign-in" value="Sign In">
+
+                        </form>
+                    </div>
                 </li>
+
             </ul>
+
+
         </div>
         <!-- /.navbar-collapse -->
     </div>
