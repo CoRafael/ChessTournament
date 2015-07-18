@@ -8,9 +8,9 @@ from tournament import views
 urlpatterns = patterns('',
                        url(r'^$', views.index, name='index'),
                        # url(r'^register/$', views.user_register, name='register'),
-                       url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'tournament/index.html'}),
-                       # url(r'^logout/$', views.user_logout, name='logout'),
+                       url(r'^login/$', views.user_login, name='login'),
+                       url(r'^logout/$', views.user_logout, name='logout'),
                        # url(r'^contact_us/$', views.contact_us, name='contact_us'),
                        # url(r'^about/$', views.about, name='about'),
-                )
+)
 
