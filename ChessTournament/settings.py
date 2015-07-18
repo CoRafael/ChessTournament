@@ -10,8 +10,13 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from django.db.models.fields import DateTimeField
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+
+DATABASE_PATH = os.path.join(BASE_DIR, 'chessTournament.db')
+Temp_Path = os.path.realpath('.')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -60,7 +65,7 @@ WSGI_APPLICATION = 'ChessTournament.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': DATABASE_PATH,
     }
 }
 
@@ -78,10 +83,23 @@ USE_L10N = True
 USE_TZ = True
 
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Absolute path to the media directory
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_PATH = os.path.join(BASE_DIR, 'static')
+
+
+STATICFILES_DIRS = (
+    STATIC_PATH,
+)
+APPEND_SLASH = True
+SMART_APPEND_SLASH = True
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR,  'templates'),
