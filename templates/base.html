@@ -67,23 +67,38 @@
                     <a href="#enter_results">Enter Results</a>
                 </li>
 
-                <li class="dropdown">
-                    <a class="dropdown-toggle" href="#" data-toggle="dropdown">Login In <strong
-                            class="caret"></strong></a>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="http://www.jquery2dotnet.com" class="dropdown-toggle" data-toggle="dropdown">Login<b
+                                class="caret"></b></a>
+                        <ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
+                            <li>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form class="form" role="form" method="post" action="login"
+                                              accept-charset="UTF-8" id="login-nav">
+                                            <div class="form-group">
+                                                <label class="sr-only" for="exampleInputEmail2">Email address</label>
+                                                <input type="email" class="form-control" id="exampleInputEmail2"
+                                                       placeholder="Email address" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="sr-only" for="exampleInputPassword2">Password</label>
+                                                <input type="password" class="form-control" id="exampleInputPassword2"
+                                                       placeholder="Password" required>
+                                            </div>
 
-                    <div class="dropdown-menu" style="padding: 25px; padding-bottom: 5px;">
-                        <form method="post" action="login" accept-charset="UTF-8">
-                            <h5>Username</h5>
-                            <input style="margin-bottom: 15px;" type="text" placeholder="Username" id="username"
-                                   name="username">
-                            <h5>Password</h5>
-                            <input style="margin-bottom: 15px;" type="password" placeholder="Password" id="password"
-                                   name="password">
-                            <input class="btn btn-primary center-block" type="submit" id="sign-in" value="Sign In">
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-default btn-block">Sign in</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
 
-                        </form>
-                    </div>
-                </li>
 
             </ul>
 
