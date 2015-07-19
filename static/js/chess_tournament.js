@@ -15,7 +15,6 @@ $(document).ready(function () {
 
     $('#create_chess_player').on('submit', function (event) {
         event.preventDefault();
-        alert("ssx")
         $.post('/addsinglechess/', $(this).serialize(), function (data) {
             $('#intupdatealert').html(data).show(400);
             setTimeout(function () {
@@ -23,6 +22,7 @@ $(document).ready(function () {
             }, 4000);
         });
         console.log("form submitted!")  // sanity check
+        this.reset(); // clear form
     });
 
 
