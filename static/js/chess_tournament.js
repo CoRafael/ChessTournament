@@ -8,7 +8,9 @@ $(document).ready(function () {
 
     $('#kostis').click(function (e) {
         e.preventDefault()
-        $('#intupdatealert').show().html('<div class="alert alert-success" role="alert" id="intupdatealert">XSXSX</div>').delay(1000).fadeOut()
+        $('#intupdatealert').show().text(function (e) {
+            return "You have potouo successfully"
+        }).delay(1000).fadeOut()
     })
 
 });
