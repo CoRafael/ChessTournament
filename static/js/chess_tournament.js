@@ -8,8 +8,7 @@ $(document).ready(function () {
 
     $('#kostis').click(function (e) {
         e.preventDefault()
-        alert("scscs")
-        $('#intupdatealert').show().html('<div class="alert alert-success" role="alert" id="intupdatealert">Kostis</div>').delay(1000).fadeOut();
+        $('#intupdatealert').show().html('<div class="alert alert-success" role="alert" id="intupdatealert">XSXSX</div>').delay(1000).fadeOut()
     })
 
 });
