@@ -65,11 +65,15 @@
                 <li class="hidden">
                     <a href="#page-top"></a>
                 </li>
-
+                <li class="page-scroll">
+                    <a href="#enter_participants">Enter Participants</a>
+                </li>
                 <li class="page-scroll">
                     <a href="#curent_results">Current Results</a>
                 </li>
-
+                <li class="page-scroll">
+                    <a href="#enter_results" id="kostis">Enter Results</a>
+                </li>
 
                 {% if user.is_authenticated == False %}
 
@@ -106,12 +110,6 @@
                     </ul>
                     </ul>
                 {% else %}
-                    <li class="page-scroll">
-                        <a href="#enter_participants">Enter Participants</a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="#enter_results" id="kostis">Enter Results</a>
-                    </li>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="http://www.jquery2dotnet.com" class="dropdown-toggle"
