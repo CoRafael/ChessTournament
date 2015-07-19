@@ -99,7 +99,7 @@
                                                     <input type="password" class="form-control" id="exampleInputEmail"
                                                            name="password" autocomplete="off" required>
                                                 </div>
-                                                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in
+                                                <button class="btn btn-lg btn-primary btn-block" type="submit">Log in
                                                 </button>
                                             </form>
                                         </div>
@@ -171,7 +171,7 @@
         </div>
 
         <div class="col-sm-6 my_border">
-            <h3>Register the Chess Titan</h3>
+            <h3>Register a Chess Titan</h3>
 
             <form data-toggle="validator" role="form" method="POST" id="create_chess_player">
                 {% csrf_token %}
@@ -195,14 +195,24 @@
                 </div>
                 <div class="form-group">
                     <label for="inputEloRating">ELO Rating</label>
-                    <input type="number" class="form-control" id="inputEloRating" name="elo_rating" min = 1 max="3000" required>
+                    <input type="number" class="form-control" id="inputEloRating" name="elo_rating" min=1 max="3000"
+                           required>
 
                     <div class="help-block with-errors"></div>
                 </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
+
+                {% if user.is_authenticated == False %}
+                    <div class="alert alert-warning" role="alert" href="#login_nav">Ooops! You have to log in first!
+                    </div>
+
+                {% else %}
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </div>
+                {% endif %}
+
+
             </form>
         </div>
 
@@ -213,18 +223,32 @@
 
             <h4>Let me upload the chess players using a .csv!!!</h4>
 
-            <p>Remember the following file format</p>
 
-            <p>name;surname;country;ELO rating;Year of birth</p>
-
-            <form>
-                <div class="form-group">
-                    <label for="exampleInputFile">Choose File</label>
-                    <input type="file" id="exampleInputFile">
+            {% if user.is_authenticated == False %}
+                <div class="alert alert-warning" role="alert" href="#login_nav">Yep! Same Here!
                 </div>
-                <button type="submit" class="btn btn-primary">Upload it</button>
-            </form>
-            <h3>Easy Peasy!</h3>
+
+            {% else %}
+                <form>
+                    <div class="form-group">
+                        <label for="exampleInputFile">Choose File</label>
+                        <input type="file" id="exampleInputFile">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload it</button>
+                </form>
+            {% endif %}
+
+
+
+
+
+
+            <h5>**Remember the following file format**</h5>
+
+            <h5>name;surname;country;ELO rating;Year of birth</h5>
+
+
+            <h3>... Easy Peasy!</h3>
 
 
         </div>
