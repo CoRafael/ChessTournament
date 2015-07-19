@@ -1,17 +1,19 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
+
 from models import *
+
+
+
 
 # Create your views here.
 def index(request):
-
     countries = Country.objects.values('name')
 
-    return render(request, 'tournament/index.html', {'countries':countries})
+    return render(request, 'tournament/index.html', {'countries': countries})
 
 
 # Use the login_required() decorator to ensure only those logged in can access the view.
@@ -23,16 +25,29 @@ def user_logout(request):
     return HttpResponseRedirect('/')
 
 
+@login_required
+def add_single_chess(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        surname = request.POST.get('surname')
+        country = request.POST.get('country')
+        elo_rating = request.POST.get('elo_rating')
+        countryGet = Country.objects.get(name=country)
+        c = ChessPlayer.objects.get_or_create(name=name, surname=surname, country=countryGet, elo_rating=elo_rating)
+        #print c
+        return HttpResponse("Chess Player successfully created!")
+    else:
+        return HttpResponse("Malakies")
+
 
 def user_login(request):
-
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
         # Gather the username and password provided by the user.
         # This information is obtained from the login form.
-                # We use request.POST.get('<variable>') as opposed to request.POST['<variable>'],
-                # because the request.POST.get('<variable>') returns None, if the value does not exist,
-                # while the request.POST['<variable>'] will raise key error exception
+        # We use request.POST.get('<variable>') as opposed to request.POST['<variable>'],
+        # because the request.POST.get('<variable>') returns None, if the value does not exist,
+        # while the request.POST['<variable>'] will raise key error exception
         username = request.POST.get('username')
         password = request.POST.get('password')
 

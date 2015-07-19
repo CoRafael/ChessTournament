@@ -173,19 +173,21 @@
         <div class="col-sm-6 my_border">
             <h3>Register the Chess Titan</h3>
 
-            <form>
+            <form data-toggle="validator" role="form" method="POST" id="create_chess_player">
+                {% csrf_token %}
+
                 <div class="form-group">
                     <label for="inputName">Name</label>
-                    <input type="text" class="form-control" id="inputName">
+                    <input type="text" class="form-control" id="inputName" name="name" required>
                 </div>
                 <div class="form-group">
                     <label for="inputSurname">Surname</label>
-                    <input type="text" class="form-control" id="inputSurname">
+                    <input type="text" class="form-control" id="inputSurname" name="surname" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="inputSurname">Where is the chess player from?</label>
-                    <select class="form-control">
+                    <label for="inputCountry">Where is the chess player from?</label>
+                    <select class="form-control" name="country" required>
                         {% for f in countries %}
                             <option value={{ f.name }}>{{ f.name }}</option>
                         {% endfor %}
@@ -193,24 +195,27 @@
                 </div>
                 <div class="form-group">
                     <label for="inputEloRating">ELO Rating</label>
-                    <input type="number" class="form-control" id="inputEloRating">
+                    <input type="number" class="form-control" id="inputEloRating" name="elo_rating" required>
+
+                    <div class="help-block with-errors"></div>
                 </div>
                 <div class="form-group">
                     <label for="inputYearofBirth">Year of Birth</label>
-                    <input type="number" class="form-control" id="inputYearofBirth">
+                    <input type="number" class="form-control" id="inputYearofBirth" name="year" required>
                 </div>
-                <button type="submit" class="btn btn-default">Submit</button>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
             </form>
         </div>
 
         <div class="col-sm-6">
 
 
-            <h3>... or</h3>
+            <h3>... Hmmmm</h3>
 
-            <h3>Let us simplify things!</h3>
-
-            <p>Upload your own file with the chess players that you desire</p>
+            <h4>Let me upload the chess players using a .csv!!!</h4>
 
             <p>Remember the following file format</p>
 
@@ -221,8 +226,9 @@
                     <label for="exampleInputFile">Choose File</label>
                     <input type="file" id="exampleInputFile">
                 </div>
-                <button type="submit" class="btn btn-default">Upload it</button>
+                <button type="submit" class="btn btn-primary">Upload it</button>
             </form>
+            <h3>Easy Peasy!</h3>
 
 
         </div>

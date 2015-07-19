@@ -13,10 +13,10 @@ def populate():
 
     User.objects._create_user('admin', 'a@a.a', 'admin', True, True)
 
-    userData = '''Magnus;Carlsen;Norway;2853;1990
-    Viswanathan;Anard;India;2816;1969
-    Veselin;Topalov;Bulgaria;2816;1995
-    Lovis;Koutsoupillas;Cyprus;2548;1991'''
+    userData = '''Magnus;Carlsen;Norway;2853
+    Viswanathan;Anard;India;2816
+    Veselin;Topalov;Bulgaria;2816
+    Lovis;Koutsoupillas;Cyprus;2548'''
 
     countryFile = open("countries.csv", "r")
     countries = countryFile.readlines()
@@ -32,7 +32,7 @@ def populate():
     for x in userData.split('\n'):
         f = x.split(';')
         country = Country.objects.get(name=f[2])
-        ChessPlayer.objects.get_or_create(name=f[0], surname=f[1], country=country, elo_rating=f[4])
+        ChessPlayer.objects.get_or_create(name=f[0], surname=f[1], country=country, elo_rating=f[3])
 
 
 
