@@ -5,7 +5,10 @@ from tournament.models import *
 
 
 class ChessPlayerAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'surname', 'country', 'elo_rating', )
+    list_display = ('id', 'name', 'surname', 'country_name', 'country_abbreviation', 'elo_rating', )
 
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'abbreviation',)
 
 admin.site.register(ChessPlayer, ChessPlayerAdmin)
+admin.site.register(Country, CountryAdmin)

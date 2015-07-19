@@ -4,11 +4,14 @@ from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
-
+from models import *
 
 # Create your views here.
 def index(request):
-    return render(request, 'tournament/index.html', {})
+
+    countries = Country.objects.values('name')
+
+    return render(request, 'tournament/index.html', {'countries':countries})
 
 
 # Use the login_required() decorator to ensure only those logged in can access the view.
