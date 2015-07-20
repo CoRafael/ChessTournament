@@ -7,103 +7,57 @@ $(document).ready(function () {
 
     $('#intupdatealert').hide()
 
-    $('#kostis').click(function (e) {
+    $('#refresh_button').click(function (e) {
         e.preventDefault()
-
-        alert('empika')
-
-        $.ajax({
-            type: 'GET',
-            url: '/update_table/',
-            dataType: 'text',
-            success: function (message) {
-                var json = jQuery.parseJSON(message);
-                var test = json['chess_players']
-                var all_players = $.parseJSON(test);//parse
-                var content = '';
-                content += '<tbody>';
-                for (var i in all_players) {
-                    content += '<tr' + '">';
-                    var fields = all_players[i].fields
-                    var index = parseInt(i, 10) + 1;
-                    content += '<td>' + index + '</td>';
-                    content += '<td>' + fields.name + '</td>';
-                    content += '<td>' + fields.surname + '</td>';
-                    content += '<td>' + fields.country + '</td>';
-                    content += '<td>' + fields.elo_rating + '</td>';
-                    content += '</tr>';
-                }
-                content += '</tbody>';
-                $('#table_results tbody').replaceWith(content);
-            }
-        });
-        //$('#intupdatealert').show().text(function (e) {
-        //    return "You have potouo successfully"
-        //}).delay(1000).fadeOut()
+        refresh()
+        print_alert_message("yeah!")
     })
 
     $('#create_chess_player').on('submit', function (event) {
         event.preventDefault();
         $.post('/addsinglechess/', $(this).serialize(), function (data) {
-            $('#intupdatealert').html(data).show(400);
-            setTimeout(function () {
-                $('#intupdatealert').hide(400)
-            }, 4000);
+            print_alert_message(data)
         });
         console.log("form submitted!")  // sanity check
         this.reset(); // clear form
-
-        $.ajax({
-            type: 'GET',
-            url: '/update_table/',
-            dataType: 'text',
-            success: function (message) {
-                var json = jQuery.parseJSON(message);
-                var test = json['chess_players']
-                var all_players = $.parseJSON(test);//parse
-                var content = '';
-                content += '<tbody>';
-                for (var i in all_players) {
-                    content += '<tr' + '">';
-                    var fields = all_players[i].fields
-                    var index = parseInt(i, 10) + 1;
-                    content += '<td>' + index + '</td>';
-                    content += '<td>' + fields.name + '</td>';
-                    content += '<td>' + fields.surname + '</td>';
-                    content += '<td>' + fields.country + '</td>';
-                    content += '<td>' + fields.elo_rating + '</td>';
-                    content += '</tr>';
-                }
-                content += '</tbody>';
-                $('#table_results tbody').replaceWith(content);
-            }
-        });
-
-
+        refresh()
     });
+});
 
-    $('upload_multiple').submit(upload);
+
+function print_alert_message(message) {
+    $('#intupdatealert').html(message).show(400);
+    setTimeout(function () {
+        $('#intupdatealert').hide(400)
+    }, 3000);
+}
 
 
-})
-;
-
-function upload(event) {
-    event.preventDefault();
-    var data = new FormData($('form').get(0));
-
+function refresh() {
     $.ajax({
-        url: $(this).attr('action'),
-        type: $(this).attr('method'),
-        data: data,
-        cache: false,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            $('#intupdatealert').html(data).show(400);
-            setTimeout(function () {
-                $('#intupdatealert').hide(400)
-            }, 4000);
+        type: 'GET',
+        url: '/update_table/',
+        dataType: 'text',
+        success: function (message) {
+            var json = jQuery.parseJSON(message);
+            var test = json['chess_players']
+            var all_players = $.parseJSON(test);//parse
+            var content = '';
+            content += '<tbody>';
+            for (var i in all_players) {
+                content += '<tr' + '">';
+                var fields = all_players[i].fields
+                var index = parseInt(i, 10) + 1;
+                content += '<td>' + index + '</td>';
+                content += '<td>' + fields.name + '</td>';
+                content += '<td>' + fields.surname + '</td>';
+                content += '<td>' + fields.country + '</td>';
+                content += '<td>' + fields.elo_rating + '</td>';
+                content += '</tr>';
+            }
+            content += '</tbody>';
+            $('#table_results tbody').replaceWith(content);
+            print_alert_message("The League has been updated")
         }
     });
 }

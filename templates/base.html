@@ -72,7 +72,7 @@
                     <a href="#curent_results">Current Results</a>
                 </li>
                 <li class="page-scroll">
-                    <a href="#enter_results" id="kostis">Enter Results</a>
+                    <a href="#enter_results">Enter Results</a>
                 </li>
 
                 {% if user.is_authenticated == False %}
@@ -208,7 +208,7 @@
 
                 {% else %}
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Register</button>
+                        <button type="submit" class="btn btn-primary my_button">Register</button>
                     </div>
                 {% endif %}
 
@@ -233,21 +233,12 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <label>Choose File</label>
-                        <input type="file" name="fileUpload" class="filestyle" data-buttonName="btn-primary">
+                        <input type="file" name="fileUpload" class="filestyle my_button"
+                               data-buttonName="btn-primary my_button">
                     </div>
-                    <button type="submit" class="btn btn-primary">Upload it</button>
+                    <button type="submit" class="btn btn-primary my_button">Upload it</button>
                 </form>
             {% endif %}
-
-
-
-
-
-
-            <h5>**Remember the following file format**</h5>
-
-            <h5>name;surname;country;ELO rating;Year of birth</h5>
-
 
             <h3>... Easy Peasy!</h3>
 
@@ -328,30 +319,49 @@
             </div>
         </div>
 
-        <table class="table table-striped" id="table_results">
-            <thead>
-            <tr>
-                {% for item in titles_table %}
-                    <th>{{ item }}</th>
-                {% endfor %}
-            </tr>
-            </thead>
 
-            <tbody>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h3>Results are being published from time to time</h3>
+                <h4>Refresh the League and stay up to date!</h4>
+            </div>
+        </div>
 
-            {% for item in chess_players %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.surname }}</td>
-                    <td>{{ item.country_name }}</td>
-                    <td>{{ item.elo_rating }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
 
-        </table>
+        <!--refresh widget-->
+        <div class="panel panel-default" data-url="/fetch-data">
+            <div class="panel-heading"><a class="pull-right"><span class="fa fa-refresh" id="refresh_button"></span></a>
+                Costis
+            </div>
+            <div class="panel-body panel-refresh">
+                <table class="table table-striped" id="table_results">
+                    <thead>
+                    <tr>
+                        {% for item in titles_table %}
+                            <th>{{ item }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
 
+                    <tbody>
+
+                    {% for item in chess_players %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.surname }}</td>
+                            <td>{{ item.country_name }}</td>
+                            <td>{{ item.elo_rating }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <!--refresh widget-->
     </div>
 </section>
 
