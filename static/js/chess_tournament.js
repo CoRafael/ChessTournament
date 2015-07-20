@@ -10,7 +10,7 @@ $(document).ready(function () {
     $('#refresh_button').click(function (e) {
         e.preventDefault()
         refresh()
-        print_alert_message("yeah!")
+        print_alert_message("The League has been updated")
     })
 
     $('#create_chess_player').on('submit', function (event) {
