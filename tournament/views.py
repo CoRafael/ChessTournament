@@ -1,10 +1,15 @@
+import csv
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 
+from forms import *
+
 from models import *
+
 
 
 
@@ -12,8 +17,9 @@ from models import *
 # Create your views here.
 def index(request):
     countries = Country.objects.values('name')
-
-    return render(request, 'tournament/index.html', {'countries': countries})
+    titles_table = ["Rank", "Name", "Surname", "Country", "Score"]
+    chess_players = ChessPlayer.objects.order_by('-elo_rating')
+    return render(request, 'tournament/index.html', {'countries': countries, 'titles_table': titles_table, 'chess_players': chess_players})
 
 
 # Use the login_required() decorator to ensure only those logged in can access the view.
@@ -34,8 +40,22 @@ def add_single_chess(request):
         elo_rating = request.POST.get('elo_rating')
         countryGet = Country.objects.get(name=country)
         c = ChessPlayer.objects.get_or_create(name=name, surname=surname, country=countryGet, elo_rating=elo_rating)
-        #print c
+        # print c
         return HttpResponse("Chess Player successfully created!")
+    else:
+        return HttpResponse("Malakies")
+
+
+@login_required
+def add_multiple_chess(request):
+    if request.method == 'POST':
+        form = UploadFileForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            print 'valid form'
+        else:
+            print 'invalid form'
+            print form.errors
+        return HttpResponse("Chess Players have been successfully created!")
     else:
         return HttpResponse("Malakies")
 
@@ -67,7 +87,7 @@ def user_login(request):
                 return HttpResponseRedirect('/')
             else:
                 # An inactive account was used - no logging in!
-                return HttpResponse("Your Rango account is disabled.")
+                return HttpResponse("Your Chess Tournament account is disabled.")
         else:
             # Bad login details were provided. So we can't log the user in.
             print "Invalid login details: {0}, {1}".format(username, password)
@@ -78,4 +98,12 @@ def user_login(request):
     else:
         # No context variables to pass to the template system, hence the
         # blank dictionary object...
-        return render(request, 'rango/login.html', {})
+        return HttpResponseRedirect('/')
+
+
+
+def get_current_results():
+    titles_table = ["Rank", "Name", "Surname", "Country", "Score"]
+    chess_players = ChessPlayer.objects.order_by('-elo_rating')
+    context = {'titles_table': titles_table, 'chess_players': chess_players}
+    return context

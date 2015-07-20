@@ -225,14 +225,15 @@
 
 
             {% if user.is_authenticated == False %}
-                <div class="alert alert-warning" role="alert" href="#login_nav">Yep! Same Here!
+                <div class="alert alert-warning" role="alert">Yep! Same Here!
                 </div>
 
             {% else %}
-                <form>
+                <form method="POST" id="upload_multiple" action="/addmultiplechess/" enctype="multipart/form-data">
+                    {% csrf_token %}
                     <div class="form-group">
-                        <label for="exampleInputFile">Choose File</label>
-                        <input type="file" id="exampleInputFile">
+                        <label>Choose File</label>
+                        <input type="file" name="fileUpload" class="filestyle" data-buttonName="btn-primary">
                     </div>
                     <button type="submit" class="btn btn-primary">Upload it</button>
                 </form>
@@ -317,6 +318,44 @@
         {#        </div>#}
     </div>
 </section>
+
+<section id="curent_results">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Current Results</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+
+
+        <table class="table table-striped" id="table_results">
+            <thead>
+            <tr>
+                {% for item in titles_table %}
+                    <th>{{ item }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+
+            <tbody>
+
+            {% for item in chess_players %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.surname }}</td>
+                    <td>{{ item.country_name }}</td>
+                    <td>{{ item.elo_rating }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+</section>
+
 
 {#<!-- About Section -->#}
 {#<section class="success" id="about">#}
@@ -739,7 +778,8 @@
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 <script src="{% static "js/classie.js" %}"></script>
 <script src="{% static "js/cbpAnimatedHeader.js" %}"></script>
-
+<script src="{% static "js/bootstrap-filestyle.js" %}"></script>
+<script src="{% static "js/bootstrap-filestyle.min.js" %}"></script>
 <!-- Contact Form JavaScript -->
 {#<script src="{% static "js/jqBootstrapValidation.js" %}"></script>#}
 {#<script src="{% static "js/contact_me.js" %}"></script>#}

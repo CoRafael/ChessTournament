@@ -21,9 +21,3 @@ class ChessPlayer(models.Model):
 
     def country_abbreviation(self):
         return self.country.abbreviation
-
-
-
-
-
-
