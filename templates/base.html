@@ -90,16 +90,17 @@
                                                   accept-charset="UTF-8" id="login-nav">
                                                 {% csrf_token %}
                                                 <div class="form-group">
-                                                    <label class="sr-only" for="exampleInputEmail2">Username</label>
-                                                    <input type="username" class="form-control" id="exampleInputEmail2"
-                                                           name="username" autocomplete="off" required>
+                                                    <input type="username" class="form-control" id="malakas"
+                                                           name="username" placeholder="Username" autocomplete="off"
+                                                           required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="sr-only" for="exampleInputEmail">Password</label>
                                                     <input type="password" class="form-control" id="exampleInputEmail"
-                                                           name="password" autocomplete="off" required>
+                                                           name="password" placeholder="Password" autocomplete="off"
+                                                           required>
                                                 </div>
-                                                <button class="btn btn-lg btn-primary btn-block" type="submit">Log in
+                                                <button class="btn btn-primary btn-block login_logout" type="submit">Log
+                                                    in
                                                 </button>
                                             </form>
                                         </div>
@@ -123,7 +124,8 @@
                                                   accept-charset="UTF-8" id="login-nav">
                                                 {% csrf_token %}
 
-                                                <button class="btn btn-lg btn-primary btn-block" type="submit">Logout
+                                                <button class="btn btn-primary btn-block login_logout" type="submit">
+                                                    Logout
                                                 </button>
                                             </form>
                                         </div>
@@ -176,38 +178,66 @@
             <form data-toggle="validator" role="form" method="POST" id="create_chess_player">
                 {% csrf_token %}
 
-                <div class="form-group">
-                    <label for="inputName">Name</label>
-                    <input type="text" class="form-control" id="inputName" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="inputSurname">Surname</label>
-                    <input type="text" class="form-control" id="inputSurname" name="surname" required>
-                </div>
 
-                <div class="form-group">
-                    <label for="inputCountry">Where is the chess player from?</label>
-                    <select class="form-control" name="country" required>
-                        {% for f in countries %}
-                            <option value={{ f.name }}>{{ f.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="inputEloRating">ELO Rating</label>
-                    <input type="number" class="form-control" id="inputEloRating" name="elo_rating" min=1 max="3000"
-                           required>
-
-                    <div class="help-block with-errors"></div>
-                </div>
 
 
                 {% if user.is_authenticated == False %}
+
+                    <div class="form-group">
+                        <label for="inputName">Name</label>
+                        <input type="text" class="form-control" id="inputName" name="name" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputSurname">Surname</label>
+                        <input type="text" class="form-control" id="inputSurname" name="surname" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputCountry">Where is the chess player from?</label>
+                        <select class="form-control" name="country" required>
+                            {% for f in countries %}
+                                <option value={{ f.name }}>{{ f.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEloRating">ELO Rating</label>
+                        <input type="number" class="form-control" id="inputEloRating" name="elo_rating" min=1 max="3000"
+                               readonly>
+
+                        <div class="help-block with-errors"></div>
+                    </div>
+
                     <div class="alert alert-warning" role="alert" href="#login_nav">Ooops! You have to log in first!
                     </div>
 
                 {% else %}
                     <div class="form-group">
+                        <div class="form-group">
+                            <label for="inputName">Name</label>
+                            <input type="text" class="form-control" id="inputName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputSurname">Surname</label>
+                            <input type="text" class="form-control" id="inputSurname" name="surname" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputCountry">Where is the chess player from?</label>
+                            <select class="form-control" name="country" required>
+                                {% for f in countries %}
+                                    <option value={{ f.name }}>{{ f.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEloRating">ELO Rating</label>
+                            <input type="number" class="form-control" id="inputEloRating" name="elo_rating" min=1
+                                   max="3000"
+                                   required>
+
+                            <div class="help-block with-errors"></div>
+                        </div>
                         <button type="submit" class="btn btn-primary my_button">Register</button>
                     </div>
                 {% endif %}
