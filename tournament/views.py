@@ -1,14 +1,18 @@
-import csv
+import json
 
 from django.shortcuts import render
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
+from django.core import serializers
 
 from forms import *
-
 from models import *
+
+
+
 
 
 
@@ -19,7 +23,9 @@ def index(request):
     countries = Country.objects.values('name')
     titles_table = ["Rank", "Name", "Surname", "Country", "Score"]
     chess_players = ChessPlayer.objects.order_by('-elo_rating')
-    return render(request, 'tournament/index.html', {'countries': countries, 'titles_table': titles_table, 'chess_players': chess_players})
+    get_data = get_current_results()
+    return render(request, 'tournament/index.html', {'countries': countries, 'titles_table': get_data['titles_table'],
+                                                     'chess_players': get_data['chess_players']})
 
 
 # Use the login_required() decorator to ensure only those logged in can access the view.
@@ -29,6 +35,18 @@ def user_logout(request):
     logout(request)
     # Take the user back to the homepage.
     return HttpResponseRedirect('/')
+
+
+@login_required
+def update_table(request):
+    if request.method == 'GET':
+        get_data = get_current_results()
+        chess_players = get_data['chess_players']
+        data = serializers.serialize("json", chess_players)
+        get_data['chess_players'] = data
+        return HttpResponse(json.dumps(get_data), content_type="application/json")
+    else:
+        return HttpResponse("Malakies")
 
 
 @login_required
@@ -99,7 +117,6 @@ def user_login(request):
         # No context variables to pass to the template system, hence the
         # blank dictionary object...
         return HttpResponseRedirect('/')
-
 
 
 def get_current_results():

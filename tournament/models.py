@@ -13,7 +13,7 @@ class Country(models.Model):
 class ChessPlayer(models.Model):
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
-    country = models.OneToOneField(Country)
+    country = models.ForeignKey(Country)
     elo_rating = models.IntegerField(default=0)
 
     def country_name(self):
