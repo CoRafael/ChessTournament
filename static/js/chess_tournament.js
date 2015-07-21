@@ -8,6 +8,7 @@ $(document).ready(function () {
     $('#intupdatealert').hide()
     $('#second_alert').hide()
 
+
     $('#refresh_button').click(function (e) {
         e.preventDefault()
         refresh()
@@ -43,6 +44,7 @@ $(document).ready(function () {
         //}, 1000);
 
     })
+
 
     $('#create_chess_player').on('submit', function (event) {
         event.preventDefault();
@@ -130,11 +132,12 @@ function getLeaderBoard() {
                 kokos += '</div>'
 
 
-                $('#start_tournament_inner').html(initTable);
-                $('#start_tournament_inner').append(kokos);
+                var item1 = $(initTable).hide().fadeIn(2000);
+                var item2 = $(kokos).hide().fadeIn(2000);
+                $('#start_tournament_inner').html(item1).append(item2);
 
                 $('html, body').animate({
-                    scrollTop: $("#yeah_let_start").offset().top
+                    scrollTop: $("#start_tournament_inner").offset().top
                 }, 1000);
             }
         }
