@@ -16,7 +16,11 @@ def populate():
     userData = '''Magnus;Carlsen;Norway;2853
     Viswanathan;Anard;India;2816
     Veselin;Topalov;Bulgaria;2816
-    Lovis;Koutsoupillas;Cyprus;2548'''
+    Hikaru;Nakamura;United States;2814
+    Fabiano;Caruana;United States;2797
+    Anish;Giri;Netherlands;2791
+    Vladimir;Kramnik;Russia;2783
+    Wesley;So;United States;2780'''
 
     countryFile = open("countries.csv", "r")
     countries = countryFile.readlines()

@@ -44,7 +44,7 @@
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
 
-
+        <div class="alert alert-success" role="alert" id="second_alert"></div>
         <div class="alert alert-success" role="alert" id="intupdatealert"></div>
 
 
@@ -69,10 +69,10 @@
                     <a href="#enter_participants">Enter Participants</a>
                 </li>
                 <li class="page-scroll">
-                    <a href="#curent_results">Current Results</a>
+                    <a href="#leaderboard">Leaderboard</a>
                 </li>
                 <li class="page-scroll">
-                    <a href="#enter_results">Enter Results</a>
+                    <a href="#start_tournament" id="label_start_tournament">Start Tournament</a>
                 </li>
 
                 {% if user.is_authenticated == False %}
@@ -171,55 +171,21 @@
                 <hr class="star-primary">
             </div>
         </div>
+        <div class="row vdivide">
+            <div class="col-sm-6">
+                <h3>Register a Chess Titan</h3>
 
-        <div class="col-sm-6 my_border">
-            <h3>Register a Chess Titan</h3>
+                <form data-toggle="validator" role="form" method="POST" id="create_chess_player">
+                    {% csrf_token %}
+                    {% if user.is_authenticated == False %}
 
-            <form data-toggle="validator" role="form" method="POST" id="create_chess_player">
-                {% csrf_token %}
-
-
-
-
-                {% if user.is_authenticated == False %}
-
-                    <div class="form-group">
-                        <label for="inputName">Name</label>
-                        <input type="text" class="form-control" id="inputName" name="name" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputSurname">Surname</label>
-                        <input type="text" class="form-control" id="inputSurname" name="surname" readonly>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="inputCountry">Where is the chess player from?</label>
-                        <select class="form-control" name="country" required>
-                            {% for f in countries %}
-                                <option value={{ f.name }}>{{ f.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputEloRating">ELO Rating</label>
-                        <input type="number" class="form-control" id="inputEloRating" name="elo_rating" min=1 max="3000"
-                               readonly>
-
-                        <div class="help-block with-errors"></div>
-                    </div>
-
-                    <div class="alert alert-warning" role="alert" href="#login_nav">Ooops! You have to log in first!
-                    </div>
-
-                {% else %}
-                    <div class="form-group">
                         <div class="form-group">
                             <label for="inputName">Name</label>
-                            <input type="text" class="form-control" id="inputName" name="name" required>
+                            <input type="text" class="form-control" id="inputName" name="name" readonly>
                         </div>
                         <div class="form-group">
                             <label for="inputSurname">Surname</label>
-                            <input type="text" class="form-control" id="inputSurname" name="surname" required>
+                            <input type="text" class="form-control" id="inputSurname" name="surname" readonly>
                         </div>
 
                         <div class="form-group">
@@ -234,117 +200,85 @@
                             <label for="inputEloRating">ELO Rating</label>
                             <input type="number" class="form-control" id="inputEloRating" name="elo_rating" min=1
                                    max="3000"
-                                   required>
+                                   readonly>
 
                             <div class="help-block with-errors"></div>
                         </div>
-                        <button type="submit" class="btn btn-primary my_button">Register</button>
+
+                        <div class="alert alert-warning" role="alert">Ooops! You have to log in first!
+                        </div>
+
+                    {% else %}
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="inputName">Name</label>
+                                <input type="text" class="form-control" id="inputName" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputSurname">Surname</label>
+                                <input type="text" class="form-control" id="inputSurname" name="surname" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inputCountry">Where is the chess player from?</label>
+                                <select class="form-control" name="country" required>
+                                    {% for f in countries %}
+                                        <option value={{ f.name }}>{{ f.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputEloRating">ELO Rating</label>
+                                <input type="number" class="form-control" id="inputEloRating" name="elo_rating" min=1
+                                       max="3000"
+                                       required>
+
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary my_button" id="register_button">Register</button>
+                        </div>
+                    {% endif %}
+
+
+                </form>
+            </div>
+
+            <div class="col-sm-6">
+
+
+                <h3>... Hmmmm</h3>
+
+                <h4>Let me upload the chess players using a .csv!!!</h4>
+
+
+                {% if user.is_authenticated == False %}
+                    <div class="alert alert-warning" role="alert">Yep! Same Here!
                     </div>
+
+                {% else %}
+                    <form method="POST" id="upload_multiple" action="/addmultiplechess/" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Choose File</label>
+                            <input type="file" name="fileUpload" class="filestyle choose_file"
+                                   data-buttonName="btn-primary choose_file">
+                        </div>
+                        <button type="submit" class="btn btn-primary my_button" id="upload_file">Upload it</button>
+                    </form>
                 {% endif %}
 
-
-            </form>
+                <h3>... Easy Peasy!</h3>
+            </div>
         </div>
 
-        <div class="col-sm-6">
-
-
-            <h3>... Hmmmm</h3>
-
-            <h4>Let me upload the chess players using a .csv!!!</h4>
-
-
-            {% if user.is_authenticated == False %}
-                <div class="alert alert-warning" role="alert">Yep! Same Here!
-                </div>
-
-            {% else %}
-                <form method="POST" id="upload_multiple" action="/addmultiplechess/" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label>Choose File</label>
-                        <input type="file" name="fileUpload" class="filestyle my_button"
-                               data-buttonName="btn-primary my_button">
-                    </div>
-                    <button type="submit" class="btn btn-primary my_button">Upload it</button>
-                </form>
-            {% endif %}
-
-            <h3>... Easy Peasy!</h3>
-
-
-        </div>
-
-        {#        <div class="row">#}
-        {#            <div class="col-sm-4 portfolio-item">#}
-        {#                <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">#}
-        {#                    <div class="caption">#}
-        {#                        <div class="caption-content">#}
-        {#                            <i class="fa fa-search-plus fa-3x"></i>#}
-        {#                        </div>#}
-        {#                    </div>#}
-        {#                    <img src="{% static "images/portfolio/cabin.png" %}" class="img-responsive" alt="">#}
-        {#                </a>#}
-        {#            </div>#}
-        {#            <div class="col-sm-4 portfolio-item">#}
-        {#                <a href="#portfolioModal2" class="portfolio-link" data-toggle="modal">#}
-        {#                    <div class="caption">#}
-        {#                        <div class="caption-content">#}
-        {#                            <i class="fa fa-search-plus fa-3x"></i>#}
-        {#                        </div>#}
-        {#                    </div>#}
-        {#                    <img src="{% static "images/portfolio/cake.png" %}" class="img-responsive" alt="">#}
-        {#                </a>#}
-        {#            </div>#}
-        {#            <div class="col-sm-4 portfolio-item">#}
-        {#                <a href="#portfolioModal3" class="portfolio-link" data-toggle="modal">#}
-        {#                    <div class="caption">#}
-        {#                        <div class="caption-content">#}
-        {#                            <i class="fa fa-search-plus fa-3x"></i>#}
-        {#                        </div>#}
-        {#                    </div>#}
-        {#                    <img src="{% static "images/portfolio/circus.png" %}" class="img-responsive" alt="">#}
-        {#                </a>#}
-        {#            </div>#}
-        {#            <div class="col-sm-4 portfolio-item">#}
-        {#                <a href="#portfolioModal4" class="portfolio-link" data-toggle="modal">#}
-        {#                    <div class="caption">#}
-        {#                        <div class="caption-content">#}
-        {#                            <i class="fa fa-search-plus fa-3x"></i>#}
-        {#                        </div>#}
-        {#                    </div>#}
-        {#                    <img src="{% static "images/portfolio/game.png" %}" class="img-responsive" alt="">#}
-        {#                </a>#}
-        {#            </div>#}
-        {#            <div class="col-sm-4 portfolio-item">#}
-        {#                <a href="#portfolioModal5" class="portfolio-link" data-toggle="modal">#}
-        {#                    <div class="caption">#}
-        {#                        <div class="caption-content">#}
-        {#                            <i class="fa fa-search-plus fa-3x"></i>#}
-        {#                        </div>#}
-        {#                    </div>#}
-        {#                    <img src="{% static "images/portfolio/safe.png" %}" class="img-responsive" alt="">#}
-        {#                </a>#}
-        {#            </div>#}
-        {#            <div class="col-sm-4 portfolio-item">#}
-        {#                <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">#}
-        {#                    <div class="caption">#}
-        {#                        <div class="caption-content">#}
-        {#                            <i class="fa fa-search-plus fa-3x"></i>#}
-        {#                        </div>#}
-        {#                    </div>#}
-        {#                    <img src="{% static "images/portfolio/submarine.png" %}" class="img-responsive" alt="">#}
-        {#                </a>#}
-        {#            </div>#}
-        {#        </div>#}
     </div>
 </section>
 
-<section id="curent_results">
+<section id="leaderboard">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h2>Current Results</h2>
+                <h2>Leaderboard</h2>
                 <hr class="star-primary">
             </div>
         </div>
@@ -385,13 +319,51 @@
                         </tr>
                     {% endfor %}
                     </tbody>
-
                 </table>
-
             </div>
         </div>
     </div>
     <!--refresh widget-->
+    </div>
+</section>
+
+<section id="start_tournament">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 id="tournament_title">Start Tournament</h2>
+                <hr class="star-primary">
+            </div>
+
+            <div class="row">
+
+                {% if user.is_authenticated == False %}
+                    <div class="col-lg-12 text-center">
+                        <div class="alert alert-warning" role="alert">Oooops! Sorry, Only privileged users beyond this
+                            point
+                        </div>
+                        <h4>Login and let the fun begin!</h4>
+                    </div>
+                {% else %}
+                    <div class="col-lg-12 text-center">
+                        <h4>You have reached this point in order for the tournament to start</h4>
+                        <h4>Please note that by the time you hit proceed you will not be able to enter any more
+                            participants
+                            in the future</h4>
+                        <button type="submit" class="btn btn-primary my_button" id="proceed_tournament">Proceed</button>
+                        <div class="alert alert-success" role="alert" id="test"></div>
+
+                    </div>
+
+
+
+                {% endif %}
+
+
+            </div>
+
+
+        </div>
     </div>
 </section>
 
