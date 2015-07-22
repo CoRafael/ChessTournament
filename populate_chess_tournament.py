@@ -41,5 +41,5 @@ def populate():
 
 
 if __name__ == '__main__':
-    print "Starting Rango population script..."
+    print "Starting Chess Tournament population script..."
     populate()
