@@ -1,4 +1,5 @@
 import json
+import random
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -9,7 +10,6 @@ from django.core import serializers
 
 from forms import *
 from models import *
-
 
 
 
@@ -73,9 +73,19 @@ def get_next_round(request):
         round_next = request.GET.get('round_next')
         roundGot = int(round_next) - 1
         winners = list(Game.objects.all().filter(result=1, round=roundGot))
-        losers = Game.objects.all().filter(result=0, round=roundGot)
-
+        losers = list(Game.objects.all().filter(result=0, round=roundGot))
+        draw = list(Game.objects.all().filter(result="0.5", round=roundGot))
         # random.shuffle(winners)
+
+        if (len(winners) % 2 != 0):
+            draw.sort(key=lambda x: x.chessPlayer1.elo_rating, reverse=True)
+            winners.append(draw[0])
+            del draw[0]
+
+        random.shuffle(winners)
+
+        winners.sort(key=lambda x: x.chessPlayer1.elo_rating, reverse=True)
+
         toSend = ''
         for index in range(len(winners) / 2):
             getGame = Game.objects.get_or_create(chessPlayer1=winners[index].chessPlayer1, chessPlayer2=winners[
@@ -85,8 +95,16 @@ def get_next_round(request):
                           index + len(winners) / 2].chessPlayer1.surname + ' - ' + winners[
                           index + len(winners) / 2].chessPlayer1.country.abbreviation + ';' + str(
                 winners[index].chessPlayer1.id) + ';' + str(
-                winners[index + len(winners) / 2].chessPlayer1.id) + ';' + str(getGame.id) + '\n'
+                winners[index + len(winners) / 2].chessPlayer1.id) + ';' + str(getGame.id)
+            if index != (len(winners) / 2 - 1):
+                toSend += '\n'
+        toSend += '_WINNERS_'
+        for index in range(len(draw)):
+            losers.append(draw[index])
 
+        losers.sort(key=lambda x: x.chessPlayer1.elo_rating, reverse=True)
+
+        random.shuffle(losers)
         for index in range(len(losers) / 2):
             getGame = Game.objects.get_or_create(chessPlayer1=losers[index].chessPlayer1, chessPlayer2=losers[
                 index + len(losers) / 2].chessPlayer1, round=round_next)[0]

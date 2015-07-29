@@ -180,12 +180,10 @@ function parseSecondGroup() {
                     content += '<td>' + fields.country + '</td>';
                     content += '<td>' + fields.elo_rating + '</td>';
                     content += '</tr>';
-
                 }
             }
             content += '</tbody>';
             content += '</table>';
-
             toReturn = content
         }
     });

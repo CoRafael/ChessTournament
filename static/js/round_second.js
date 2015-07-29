@@ -2,17 +2,18 @@
  * Created by rafael on 7/27/15.
  */
 
-function start_round_2() {
+function start_round(id) {
+
     jQuery.ajax({
         type: 'POST',
         url: '/check_round/',
         data: {
             csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
-            round: 2
+            round: id
         },
         success: function (data, status) {
             if (data == "True") {
-                prepare_round_2()
+                prepare_round(id)
             }
             else {
                 print_alert_message(data)
@@ -22,69 +23,68 @@ function start_round_2() {
 }
 
 
-function prepare_round_2() {
+function prepare_round(id) {
     var winners = ''
     var loosers = ''
 
     var newText = '';
-    var title_round_2 = create_label_for_round(2)
+    var title_round_2 = create_label_for_round(id)
     newText += title_round_2;
     newText += add_label_winners_loosers("Winners vs Winners")
     //fetch winners
-    newText += '<div id="round_2_contents_winners">'
+    newText += '<div id="round_' + id + '_contents_winners">'
     newText += winners
     newText += '</div>'
-    newText += '<div id="round_2_contents_loosers">'
+    newText += '<div id="round_' + id + '_contents_loosers">'
     newText += add_label_winners_loosers("Loosers vs Loosers")
     //fetch loosers
     newText += loosers
     newText += '</div>'
-    replace_content('#go_round_2', create_item_to_place(newText))
-    var buttonToAdd = create_button_next_round(3)
-    append_content('#go_round_2', create_item_to_place(buttonToAdd))
+    replace_content('#go_round_' + id, create_item_to_place(newText))
+    var buttonToAdd = create_button_next_round(id + 1)
+    append_content('#go_round_' + id, create_item_to_place(buttonToAdd))
 
     $.ajax({
             type: 'GET',
             url: '/get_next_round/',
             dataType: 'text',
             data: {
-                round_next: 2
+                round_next: id
             },
             success: function (message) {
-                var toSplit = message.split('\n')
-                for (var i in toSplit) {
-                    toAnalaze = toSplit[i].split(';')
-                    //next row in container
-                    var round1 = '<div class="row">'
-                    //first Column with the first group
-                    round1 += '<div class="col-sm-3 text-center pagination-centered center-block">'
-                    round1 += '<h4>' + toAnalaze[0] + '</h4>'
-                    round1 += '</div>' // end of first column
-                    //middle Column with the vs word
-                    round1 += '<div class="col-sm-3 text-center pagination-centered center-block">'
-                    round1 += '<h4>Vs</h4>';
-                    round1 += '</div>' // end of middle Column with the vs word
-                    //second Column with the second group
-                    round1 += '<div class="col-sm-3 text-center pagination-centered center-block">'
-                    round1 += '<h4>' + toAnalaze[1] + '</h4>'
-                    round1 += '</div>  ' // end of second column with the second group
-                    round1 += '<div class="col-sm-3 text-center" id="replace_result_' + toAnalaze[4] + '">'
-                    round1 += create_button_result(toAnalaze[0], toAnalaze[1], toAnalaze[2], toAnalaze[3], toAnalaze[4])
-                    round1 += '</div>  '
-                    round1 += '</div>  ' // end of second column with the second group
-                    if (i < toSplit.length / 2) {
-                        append_content('#round_2_contents_winners', create_item_to_place(round1))
-                    }
-                    else {
-                        append_content('#round_2_contents_loosers', create_item_to_place(round1))
-                    }
-                }
+                var toSplit = message.split('_WINNERS_')
+                win = toSplit[0]
+                create_line_to_append('#round_' + id + '_contents_winners', win)
+                lose = toSplit[1]
+                create_line_to_append('#round_' + id + '_contents_loosers', lose)
             }
         }
     )
 }
-function my_animate(where) {
-    $('html, body').animate({
-        scrollTop: $(where).offset().top
-    }, 500);
+
+
+function create_line_to_append(where, what) {
+    var toSplit = what.split('\n')
+    for (var i in toSplit) {
+        toAnalaze = toSplit[i].split(';')
+        //next row in container
+        var round1 = '<div class="row">'
+        //first Column with the first group
+        round1 += '<div class="col-sm-3 text-center pagination-centered center-block">'
+        round1 += '<h4>' + toAnalaze[0] + '</h4>'
+        round1 += '</div>' // end of first column
+        //middle Column with the vs word
+        round1 += '<div class="col-sm-3 text-center pagination-centered center-block">'
+        round1 += '<h4>Vs</h4>';
+        round1 += '</div>' // end of middle Column with the vs word
+        //second Column with the second group
+        round1 += '<div class="col-sm-3 text-center pagination-centered center-block">'
+        round1 += '<h4>' + toAnalaze[1] + '</h4>'
+        round1 += '</div>  ' // end of second column with the second group
+        round1 += '<div class="col-sm-3 text-center" id="replace_result_' + toAnalaze[4] + '">'
+        round1 += create_button_result(toAnalaze[0], toAnalaze[1], toAnalaze[2], toAnalaze[3], toAnalaze[4])
+        round1 += '</div>  '
+        round1 += '</div>  ' // end of second column with the second group
+        append_content(where, create_item_to_place(round1))
+    }
 }

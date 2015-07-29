@@ -47,7 +47,7 @@ $('#proceed_tournament').click(function (e) {
 function create_button_next_round(which) {
     var button = ''
     button += '<div class="col-sm-12 text-center" id="go_round_' + which + '">'
-    button += '<button type="submit" class="btn btn-primary login_logout" onclick="start_round_' + which +'()">Let\'s Move to Round ' + which + '</button>'
+    button += '<button type="submit" class="btn btn-primary login_logout" onclick="start_round(' + which + ')">Let\'s Move to Round ' + which + '</button>'
     button += '</div>'
     return button
 }
