@@ -54,7 +54,8 @@ function prepare_round(id) {
             success: function (message) {
                 var toSplit = message.split('_WINNERS_')
                 win = toSplit[0]
-                create_line_to_append('#round_' + id + '_contents_winners', win)
+                if (win != '')
+                    create_line_to_append('#round_' + id + '_contents_winners', win)
                 lose = toSplit[1]
                 create_line_to_append('#round_' + id + '_contents_loosers', lose)
             }
