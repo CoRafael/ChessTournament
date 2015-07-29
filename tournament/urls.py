@@ -13,6 +13,11 @@ urlpatterns = patterns('',
                        url(r'^addsinglechess/$', views.add_single_chess, name='add_single_chess'),
                        url(r'^addmultiplechess/$', views.add_multiple_chess, name='add_multiple_chess'),
                        url(r'^update_table/$', views.update_table, name='update_table'),
+                       url(r'^get_first_round/$', views.get_first_round, name='get_first_round'),
+                       url(r'^put_results/$', views.put_results, name='put_results'),
+                       url(r'^check_round/$', views.check_round, name='check_round'),
+                       url(r'^get_next_round/$', views.get_next_round, name='get_next_round'),
+
                        # url(r'^contact_us/$', views.contact_us, name='contact_us'),
                        # url(r'^about/$', views.about, name='about'),
 )

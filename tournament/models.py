@@ -21,3 +21,16 @@ class ChessPlayer(models.Model):
 
     def country_abbreviation(self):
         return self.country.abbreviation
+
+
+class Game(models.Model):
+    chessPlayer1 = models.ForeignKey(ChessPlayer, related_name='Game.chess_player1')
+    chessPlayer2 = models.ForeignKey(ChessPlayer, related_name='Game.chess_player2')
+    round = models.IntegerField(default=-1)
+    result = models.FloatField(default=-1)
+
+    def player_1(self):
+        return self.chessPlayer1.name + ' ' + self.chessPlayer1.surname
+
+    def player_2(self):
+        return self.chessPlayer2.name + ' ' + self.chessPlayer2.surname

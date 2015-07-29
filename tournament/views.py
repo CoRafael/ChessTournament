@@ -1,7 +1,6 @@
 import json
 
 from django.shortcuts import render
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth import authenticate, login
@@ -16,10 +15,9 @@ from models import *
 
 
 
-
-
 # Create your views here.
 def index(request):
+    Game.objects.all().delete()
     countries = Country.objects.values('name')
     titles_table = ["Rank", "Name", "Surname", "Country", "Score"]
     chess_players = ChessPlayer.objects.order_by('-elo_rating')
@@ -46,7 +44,99 @@ def update_table(request):
         get_data['chess_players'] = data
         return HttpResponse(json.dumps(get_data), content_type="application/json")
     else:
-        return HttpResponse("Malakies")
+        return HttpResponse("Something went wrong. Please retry")
+
+
+@login_required
+def get_first_round(request):
+    if request.method == 'GET':
+        chess_players = ChessPlayer.objects.order_by('-elo_rating')
+        toSend = ''
+        for x in range(0, len(chess_players) / 2):
+            print chess_players[x].id
+            getGame = Game.objects.get_or_create(chessPlayer1=chess_players[x],
+                                                 chessPlayer2=chess_players[x + len(chess_players) / 2], round=1)[0]
+            toSend += chess_players[x].surname + ' - ' + chess_players[x].country.abbreviation + ';' + chess_players[
+                x + len(chess_players) / 2].surname + ' - ' + chess_players[
+                          x + len(chess_players) / 2].country.abbreviation + ';' + str(chess_players[x].id) + ';' + str(
+                chess_players[x + len(chess_players) / 2].id) + ';' + str(getGame.id)
+            if x != (len(chess_players) / 2 - 1):
+                toSend += '\n'
+        return HttpResponse(toSend)
+    else:
+        return HttpResponse("Something went wrong. Please retry")
+
+
+@login_required
+def get_next_round(request):
+    if request.method == 'GET':
+        round_next = request.GET.get('round_next')
+        roundGot = int(round_next) - 1
+        winners = list(Game.objects.all().filter(result=1, round=roundGot))
+        losers = Game.objects.all().filter(result=0, round=roundGot)
+
+        # random.shuffle(winners)
+        toSend = ''
+        for index in range(len(winners) / 2):
+            getGame = Game.objects.get_or_create(chessPlayer1=winners[index].chessPlayer1, chessPlayer2=winners[
+                index + len(winners) / 2].chessPlayer1, round=round_next)[0]
+            toSend += winners[index].chessPlayer1.surname + ' - ' + winners[
+                index].chessPlayer1.country.abbreviation + ';' + winners[
+                          index + len(winners) / 2].chessPlayer1.surname + ' - ' + winners[
+                          index + len(winners) / 2].chessPlayer1.country.abbreviation + ';' + str(
+                winners[index].chessPlayer1.id) + ';' + str(
+                winners[index + len(winners) / 2].chessPlayer1.id) + ';' + str(getGame.id) + '\n'
+
+        for index in range(len(losers) / 2):
+            getGame = Game.objects.get_or_create(chessPlayer1=losers[index].chessPlayer1, chessPlayer2=losers[
+                index + len(losers) / 2].chessPlayer1, round=round_next)[0]
+            toSend += losers[index].chessPlayer1.surname + ' - ' + losers[
+                index].chessPlayer1.country.abbreviation + ';' + losers[
+                          index + len(losers) / 2].chessPlayer1.surname + ' - ' + losers[
+                          index + len(losers) / 2].chessPlayer1.country.abbreviation + ';' + str(
+                losers[index].chessPlayer1.id) + ';' + str(
+                losers[index + len(losers) / 2].chessPlayer1.id) + ';' + str(getGame.id)
+            if index != (len(losers) / 2 - 1):
+                toSend += '\n'
+
+        return HttpResponse(toSend)
+    else:
+        return HttpResponse("Something went wrong. Please retry")
+
+
+@login_required
+def put_results(request):
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        result = request.POST.get('result')
+        updateRecord = Game.objects.get(id=id)
+        updateRecord.result = result
+        updateRecord.save()
+        res = updateRecord.result
+        go = 0.5
+        if res == '1':
+            go = 0
+        elif res == '0':
+            go = 1
+        Game.objects.get_or_create(chessPlayer1=updateRecord.chessPlayer2, chessPlayer2=updateRecord.chessPlayer1,
+                                   round=updateRecord.round, result=go)
+        return HttpResponse("Result saved successfully")
+    else:
+        return HttpResponse("Something went wrong. Please retry")
+
+
+@login_required
+def check_round(request):
+    if request.method == 'POST':
+        round = request.POST.get('round')
+        toCheck = int(round) - 1
+        getResults = Game.objects.all().filter(result=-1, round=toCheck)
+        if len(getResults) == 0:
+            return HttpResponse("True")
+        else:
+            return HttpResponse("Please place result for all matches before further proceeding")
+    else:
+        return HttpResponse("Something went wrong. Please retry")
 
 
 @login_required
@@ -61,7 +151,7 @@ def add_single_chess(request):
         # print c
         return HttpResponse("Chess Player successfully created!")
     else:
-        return HttpResponse("Malakies")
+        return HttpResponse("Something went wrong. Please retry")
 
 
 @login_required
@@ -75,7 +165,7 @@ def add_multiple_chess(request):
             print form.errors
         return HttpResponse("Chess Players have been successfully created!")
     else:
-        return HttpResponse("Malakies")
+        return HttpResponse("Something went wrong. Please retry")
 
 
 def user_login(request):
