@@ -48,11 +48,6 @@ function create_button_next_round(which) {
     var button = ''
     button += '<div class="col-sm-12 text-center" id="go_round_' + which + '">'
     button += '<button type="submit" class="btn btn-primary login_logout" onclick="start_round(' + which + ')">Let\'s Move to Round ' + which + '</button>'
-
-    button += '<br>'
-    button += '<br>'
-    button += '<button type="submit" class="btn btn-primary login_logout" onclick="finalize()">End this Tournament' + which + '</button>'
-
     return button
 }
 
@@ -138,21 +133,84 @@ function refresh() {
     });
 }
 
-function finalize() {
+function finalize(id) {
     $.ajax({
         type: 'GET',
         url: '/finalize/',
         dataType: "json",
         success: function (message) {
-            //var g = message.data.sort(function (a, b) {
-            //    return a.wins - b.wins || a.wins - b.wins;
-            //});
             var chess_players = message.data
             var c1 = chess_players.sort(sortFunc);
+            var initTable = '';
+            initTable += '<div class=\"container\">';
+            initTable += '<div class="row">'
+            initTable += '<div class="col-lg-12 text-center" id="final_results">'
+            initTable += '<br>'
+            initTable += '<h2>Final Tournament Results</h2>'
+            initTable += '<hr class="star-primary">'
+            initTable += '</div>'
+            initTable += '</div>'
+            initTable += '<div class=\"panel-body panel-refresh\">';
+            initTable += '<table class=\"table table-striped\" id=\"leaderboard_to_add\">';
+            initTable += '<thead>';
+            initTable += '<tr>';
+            initTable += '<th> Rank </th>';
+            initTable += '<th> Name </th>';
+            initTable += '<th> Surname </th>';
+            initTable += '<th> Country </th>';
+            initTable += '<th> Wins </th>';
+            initTable += '<th> Draws </th>';
+            initTable += '<th> Losses </th>';
+            initTable += '<th> Score </tr>';
+            initTable += '</tr>';
+            initTable += '</thead>';
+            initTable += '<tbody>';
+            initTable += analyzeFinalResults(c1);
+            initTable += '</tbody>';
+            initTable += '</table>';
+            initTable += '</div>';
+            initTable += '<div class="row">'
+            initTable += '<div class="col-lg-12 text-center">'
+            initTable += '<h3>End of the Tournament</h3>'
+            initTable += '<br>'
+            initTable += '<br>'
+            initTable += '<h3>Thank you for choosing us today</h3>'
+            initTable += '<br>'
+            initTable += '<br>'
+            initTable += '<h3>We salut you with the following quote... Hope to see you again soon!</h3>'
 
-            for (var i = 0; i < c1.length; i++) {
-                alert(c1[i].name + c1[i].wins)
-            }
+            initTable += '<blockquote> <p>When I found that idea I simply couldn’t resist playing it. And look, people talk about me as a player who doesn’t care about beauty. That’s not true. It’s simply that during the game each person sees beauty in different things. I like the beauty of the endgame, but I also get pleasure from finding ideas like those against Grischuk. - (on his game vs. Grischuk at the Tal Memorial 2012)&nbsp; - &nbsp; Magnus Carlsen</p> </blockquote>'
+            initTable += '</div>';
+            initTable += '</div>';
+            initTable += '</div>';
+
+
+            $('#go_round_' + id).html('');
+
+            append_content_focus('#start_tournament', create_item_to_place(initTable), '#final_results')
+
         }
     });
+}
+
+
+function analyzeFinalResults(c1) {
+    var content = '';
+    content += '<tbody>';
+    for (var i = 0; i < c1.length; i++) {
+        //alert(c1[i].name + '_' + c1[i].wins + '_' + c1[i].draws + '_' + c1[i].losses)
+        content += '<tr' + '">';
+        var index = i + 1;
+        content += '<td>' + index + '</td>';
+        content += '<td>' + c1[i].name + '</td>';
+        content += '<td>' + c1[i].surname + '</td>';
+        content += '<td>' + c1[i].country_name + '</td>';
+        content += '<td>' + c1[i].wins + '</td>';
+        content += '<td>' + c1[i].draws + '</td>';
+        content += '<td>' + c1[i].losses + '</td>';
+        content += '<td>' + c1[i].elo_rating + '</td>';
+        content += '</tr>';
+    }
+    content += '</tbody>';
+    return content;
 }

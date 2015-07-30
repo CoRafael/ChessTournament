@@ -13,6 +13,7 @@ from models import *
 
 
 
+
 # Create your views here.
 def index(request):
     Game.objects.all().delete()
@@ -78,7 +79,7 @@ def finalize(request):
             loss = Game.objects.all().filter(chessPlayer1=ch_player.id, result=0)
             toSendElement = {}
             toSendElement['index'] = i
-            i+=1
+            i += 1
             toSendElement['name'] = ch_player.name
             toSendElement['surname'] = ch_player.surname
             toSendElement['country_name'] = ch_player.country_name()
@@ -90,7 +91,6 @@ def finalize(request):
         context_to_send = {}
         context_to_send['data'] = toSend
         json_data = json.dumps(context_to_send)
-        print json_data
         return HttpResponse(json_data, content_type="application/json")
     else:
         return HttpResponse("Something went wrong. Please retry")

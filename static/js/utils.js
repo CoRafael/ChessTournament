@@ -36,6 +36,14 @@ function append_content(where, what) {
     }, 500);
 }
 
+function append_content_focus(where, what, focus) {
+    $(where).append(what);
+
+    $('html, body').animate({
+        scrollTop: $(focus).offset().top
+    }, 500);
+}
+
 function add_label_winners_loosers(what) {
     var toReturn = '<div class="col-sm-12 text-center pagination-centered center-block">';
     toReturn += '<h3>' + what + '</h3>';
@@ -67,26 +75,26 @@ function sortFunc(a, b) {
         return 1;
     else if (a.wins > b.wins)
         return -1;
-    //else if (a.wins == b.wins) {
-    //    if (a.elo_rating > b.elo_rating)
-    //        return 1;
-    //    else
-    //        return -1;
-    //}
-    //else if (a.draws = b.draws) {
-    //    if (a.losses < b.losses)
-    //        return 1;
-    //    else if (a.losses > b.losses)
-    //        return -1;
-    //    else {
-    //        if (a.elo_rating > b.elo_rating)
-    //            return 1;
-    //        else
-    //            return -1;
-    //    }
-    //}
-    //else if (a.draws > b.draws && a.losses < b.losses)
-    //    return 1;
-    //else if (a.draws < b.draws && a.losses > b.losses)
-    //    return -1;
+    else if (a.wins == b.wins) {
+        if (a.elo_rating > b.elo_rating)
+            return 1;
+        else
+            return -1;
+    }
+    else if (a.draws = b.draws) {
+        if (a.losses < b.losses)
+            return 1;
+        else if (a.losses > b.losses)
+            return -1;
+        else {
+            if (a.elo_rating > b.elo_rating)
+                return 1;
+            else
+                return -1;
+        }
+    }
+    else if (a.draws > b.draws && a.losses < b.losses)
+        return 1;
+    else if (a.draws < b.draws && a.losses > b.losses)
+        return -1;
 }

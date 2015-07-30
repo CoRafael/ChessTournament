@@ -42,6 +42,11 @@ function prepare_round(id) {
     newText += '</div>'
     replace_content('#go_round_' + id, create_item_to_place(newText))
     var buttonToAdd = create_button_next_round(id + 1)
+    buttonToAdd += '<br>'
+    buttonToAdd += '<br>'
+    buttonToAdd += '<div class="row" id="end_tournament">'
+    buttonToAdd += '<button type="submit" class="btn btn-primary login_logout" onclick="finalize(' + id + ')">End this Tournament</button>'
+    buttonToAdd += '</div>'
     append_content('#go_round_' + id, create_item_to_place(buttonToAdd))
 
     $.ajax({
