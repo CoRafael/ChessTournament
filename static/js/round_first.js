@@ -65,17 +65,20 @@ function first_round() {
             for (var i in toSplit) {
                 toAnalaze = toSplit[i].split(';')
                 //next row in container
-                var round1 = '<div class="row">'
+                var round1 = '<div class="row" >'
                 //first Column with the first group
                 round1 += '<div class="col-sm-3 text-center pagination-centered center-block">'
+                round1 += '<img src="' + [DJANGO_STATIC_URL] + 'images/knight_black.jpg" width="50" height="50" alt="SomeImage"/>'
                 round1 += '<h4>' + toAnalaze[0] + '</h4>'
                 round1 += '</div>' // end of first column
                 //middle Column with the vs word
-                round1 += '<div class="col-sm-3 text-center pagination-centered center-block">'
+                round1 += '<div id="vs" class="col-sm-3 text-center pagination-centered center-block">'
                 round1 += '<h4>Vs</h4>';
                 round1 += '</div>' // end of middle Column with the vs word
                 //second Column with the second group
                 round1 += '<div class="col-sm-3 text-center pagination-centered center-block">'
+                round1 += '<img src="' + [DJANGO_STATIC_URL] + 'images/knight_white.jpg" width="50" height="50" alt="SomeImage"/>'
+
                 round1 += '<h4>' + toAnalaze[1] + '</h4>'
                 round1 += '</div>  ' // end of second column with the second group
                 round1 += '<div class="col-sm-3 text-center" id="replace_result_' + toAnalaze[4] + '">'

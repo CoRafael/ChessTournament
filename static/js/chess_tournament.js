@@ -17,6 +17,9 @@ $('#refresh_button').click(function (e) {
 });
 
 
+
+
+
 $('#proceed_tournament').click(function (e) {
     e.preventDefault();
     $('#label_start_tournament').html("Tournament Progress");
