@@ -17,6 +17,7 @@ urlpatterns = patterns('',
                        url(r'^put_results/$', views.put_results, name='put_results'),
                        url(r'^check_round/$', views.check_round, name='check_round'),
                        url(r'^get_next_round/$', views.get_next_round, name='get_next_round'),
+                       url(r'^finalize/$', views.finalize, name='finalize'),
 
                        # url(r'^contact_us/$', views.contact_us, name='contact_us'),
                        # url(r'^about/$', views.about, name='about'),

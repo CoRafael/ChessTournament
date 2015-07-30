@@ -17,9 +17,6 @@ $('#refresh_button').click(function (e) {
 });
 
 
-
-
-
 $('#proceed_tournament').click(function (e) {
     e.preventDefault();
     $('#label_start_tournament').html("Tournament Progress");
@@ -51,7 +48,11 @@ function create_button_next_round(which) {
     var button = ''
     button += '<div class="col-sm-12 text-center" id="go_round_' + which + '">'
     button += '<button type="submit" class="btn btn-primary login_logout" onclick="start_round(' + which + ')">Let\'s Move to Round ' + which + '</button>'
-    button += '</div>'
+
+    button += '<br>'
+    button += '<br>'
+    button += '<button type="submit" class="btn btn-primary login_logout" onclick="finalize()">End this Tournament' + which + '</button>'
+
     return button
 }
 
@@ -113,7 +114,6 @@ function getLeaderBoard() {
                 newText += '</div>';
                 newText += '</div>';
 
-
                 var item1 = create_item_to_place(initTable);
                 var item2 = create_item_to_place(newText);
 
@@ -134,6 +134,17 @@ function refresh() {
         success: function (message) {
             $('#table_results tbody').replaceWith(getLeaderBoardRowsToAdd(message));
             print_alert_message("The League has been updated")
+        }
+    });
+}
+
+function finalize() {
+    $.ajax({
+        type: 'GET',
+        url: '/finalize/',
+        dataType: 'text',
+        success: function (message) {
+            alert(message)
         }
     });
 }

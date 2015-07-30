@@ -23,11 +23,12 @@ class ChessPlayer(models.Model):
         return self.country.abbreviation
 
 
+# , db_index=True
 class Game(models.Model):
-    chessPlayer1 = models.ForeignKey(ChessPlayer, related_name='Game.chess_player1')
+    chessPlayer1 = models.ForeignKey(ChessPlayer, related_name='Game.chess_player1', db_index=True)
     chessPlayer2 = models.ForeignKey(ChessPlayer, related_name='Game.chess_player2')
-    round = models.IntegerField(default=-1)
-    result = models.FloatField(default=-1)
+    round = models.IntegerField(default=-1, db_index=True)
+    result = models.FloatField(default=-1, db_index=True)
 
     def player_1(self):
         return self.chessPlayer1.name + ' ' + self.chessPlayer1.surname

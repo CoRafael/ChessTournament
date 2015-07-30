@@ -15,6 +15,15 @@ from models import *
 
 
 
+
+
+
+
+
+
+
+
+
 # Create your views here.
 def index(request):
     Game.objects.all().delete()
@@ -43,6 +52,38 @@ def update_table(request):
         data = serializers.serialize("json", chess_players)
         get_data['chess_players'] = data
         return HttpResponse(json.dumps(get_data), content_type="application/json")
+    else:
+        return HttpResponse("Something went wrong. Please retry")
+
+
+@login_required
+def finalize(request):
+    if request.method == 'GET':
+
+        chess_players = ChessPlayer.objects.all()
+        expected_scores = {}
+        for ch_player1 in chess_players:
+            for ch_player2 in chess_players:
+                if ch_player1.id != ch_player2.id:
+                    temp1 = (ch_player2.elo_rating - ch_player1.elo_rating) / 400.0
+                    temp2 = 10 ** temp1
+                    final = 1 / (1 + temp2)
+                    expected_scores[ch_player1.name + '_' +
+                                    ch_player2.name] = final
+
+        for ch_player in chess_players:
+            all_games = Game.objects.all().filter(chessPlayer1=ch_player.id, result__gt=-1)
+            real = 0
+            expected = 0
+            for game in all_games:
+                real += game.result
+                expected += expected_scores[ch_player.name + '_' +
+                                            game.chessPlayer2.name]
+            sub = (real - expected) * 32
+            final_elo_rating = ch_player.elo_rating + sub
+            ch_player.elo_rating = int(final_elo_rating)
+            ch_player.save()
+        return HttpResponse("success")
     else:
         return HttpResponse("Something went wrong. Please retry")
 

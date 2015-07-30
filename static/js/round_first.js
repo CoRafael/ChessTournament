@@ -17,6 +17,7 @@ function devide_groups() {
     newText += '</div>'; // end of first column
     //middle Column with the vs word
     newText += '<div class="col-sm-4 text-center pagination-centered center-block">';
+    newText += '<br>'
     newText += '<h1>Vs</h1>';
     newText += '</div>'; // end of middle Column with the vs word
     //second Column with the second group
@@ -73,15 +74,16 @@ function first_round() {
                 round1 += '</div>' // end of first column
                 //middle Column with the vs word
                 round1 += '<div id="vs" class="col-sm-3 text-center pagination-centered center-block">'
+                round1 += '<br>'
                 round1 += '<h4>Vs</h4>';
                 round1 += '</div>' // end of middle Column with the vs word
                 //second Column with the second group
                 round1 += '<div class="col-sm-3 text-center pagination-centered center-block">'
                 round1 += '<img src="' + [DJANGO_STATIC_URL] + 'images/knight_white.jpg" width="50" height="50" alt="SomeImage"/>'
-
                 round1 += '<h4>' + toAnalaze[1] + '</h4>'
                 round1 += '</div>  ' // end of second column with the second group
                 round1 += '<div class="col-sm-3 text-center" id="replace_result_' + toAnalaze[4] + '">'
+                round1 += '<br>'
                 round1 += create_button_result(toAnalaze[0], toAnalaze[1], toAnalaze[2], toAnalaze[3], toAnalaze[4])
                 round1 += '</div>  ' // end of second column with the second group
                 append_content('#start_tournament_inner', create_item_to_place(round1))
@@ -194,22 +196,7 @@ function parseSecondGroup() {
 }
 
 
-function place_result(id, result, who_won) {
-    jQuery.ajax({
-        type: 'POST',
-        url: '/put_results/',
-        data: {
-            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
-            id: id,
-            result: result
-        },
-        success: function (data, status) {
-            print_alert_message(data)
-            var toAddUpload = '<div class="alert alert-warning" role="alert">' + who_won + '</div>';
-            $('#replace_result_' + id).html(toAddUpload)
-        }
-    });
-}
+
 
 
 function create_button_result(player_1, player_2, user1, user2, id) {

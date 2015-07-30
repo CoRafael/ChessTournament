@@ -42,3 +42,21 @@ function add_label_winners_loosers(what) {
     toReturn += '</div>';
     return toReturn;
 }
+
+function place_result(id, result, who_won) {
+    jQuery.ajax({
+        type: 'POST',
+        url: '/put_results/',
+        data: {
+            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+            id: id,
+            result: result
+        },
+        success: function (data, status) {
+            print_alert_message(data)
+            var toAddUpload = '<br>';
+            toAddUpload += '<div class="alert alert-warning" role="alert">' + who_won + '</div>'
+            $('#replace_result_' + id).html(toAddUpload)
+        }
+    });
+}
