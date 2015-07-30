@@ -76,7 +76,7 @@ function sortFunc(a, b) {
     else if (a.wins > b.wins)
         return -1;
     else if (a.wins == b.wins) {
-        if (a.elo_rating > b.elo_rating)
+        if (a.elo_rating < b.elo_rating)
             return 1;
         else
             return -1;
