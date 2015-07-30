@@ -134,63 +134,90 @@ function refresh() {
 }
 
 function finalize(id) {
-    $.ajax({
-        type: 'GET',
-        url: '/finalize/',
-        dataType: "json",
-        success: function (message) {
-            var chess_players = message.data
-            var c1 = chess_players.sort(sortFunc);
-            var initTable = '';
-            initTable += '<div class=\"container\">';
-            initTable += '<div class="row">'
-            initTable += '<div class="col-lg-12 text-center" id="final_results">'
-            initTable += '<br>'
-            initTable += '<h2>Final Tournament Results</h2>'
-            initTable += '<hr class="star-primary">'
-            initTable += '</div>'
-            initTable += '</div>'
-            initTable += '<div class=\"panel-body panel-refresh\">';
-            initTable += '<table class=\"table table-striped\" id=\"leaderboard_to_add\">';
-            initTable += '<thead>';
-            initTable += '<tr>';
-            initTable += '<th> Rank </th>';
-            initTable += '<th> Name </th>';
-            initTable += '<th> Surname </th>';
-            initTable += '<th> Country </th>';
-            initTable += '<th> Wins </th>';
-            initTable += '<th> Draws </th>';
-            initTable += '<th> Losses </th>';
-            initTable += '<th> Score </tr>';
-            initTable += '</tr>';
-            initTable += '</thead>';
-            initTable += '<tbody>';
-            initTable += analyzeFinalResults(c1);
-            initTable += '</tbody>';
-            initTable += '</table>';
-            initTable += '</div>';
-            initTable += '<div class="row">'
-            initTable += '<div class="col-lg-12 text-center">'
-            initTable += '<h3>End of the Tournament</h3>'
-            initTable += '<br>'
-            initTable += '<br>'
-            initTable += '<h3>Thank you for choosing us today</h3>'
-            initTable += '<br>'
-            initTable += '<br>'
-            initTable += '<h3>We salut you with the following quote... Hope to see you again soon!</h3>'
 
-            initTable += '<blockquote> <p>When I found that idea I simply couldn’t resist playing it. And look, people talk about me as a player who doesn’t care about beauty. That’s not true. It’s simply that during the game each person sees beauty in different things. I like the beauty of the endgame, but I also get pleasure from finding ideas like those against Grischuk. - (on his game vs. Grischuk at the Tal Memorial 2012)&nbsp; - &nbsp; Magnus Carlsen</p> </blockquote>'
-            initTable += '</div>';
-            initTable += '</div>';
-            initTable += '</div>';
-
-
-            $('#go_round_' + id).html('');
-
-            append_content_focus('#start_tournament', create_item_to_place(initTable), '#final_results')
-
+    id += 1
+    var proceed = true
+    jQuery.ajax({
+        type: 'POST',
+        url: '/check_round/',
+        data: {
+            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+            round: id
+        },
+        async: false,
+        success: function (data, status) {
+            if (data == "True") {
+                proceed = true
+            }
+            else {
+                proceed = false
+                print_alert_message(data)
+            }
         }
     });
+
+    if (proceed == true) {
+
+
+        $.ajax({
+            type: 'GET',
+            url: '/finalize/',
+            dataType: "json",
+            async: false,
+            success: function (message) {
+                var chess_players = message.data
+                var c1 = chess_players.sort(sortFunc);
+                var initTable = '';
+                initTable += '<div class=\"container\">';
+                initTable += '<div class="row">'
+                initTable += '<div class="col-lg-12 text-center" id="final_results">'
+                initTable += '<br>'
+                initTable += '<h2>Final Tournament Results</h2>'
+                initTable += '<hr class="star-primary">'
+                initTable += '</div>'
+                initTable += '</div>'
+                initTable += '<div class=\"panel-body panel-refresh\">';
+                initTable += '<table class=\"table table-striped\" id=\"leaderboard_to_add\">';
+                initTable += '<thead>';
+                initTable += '<tr>';
+                initTable += '<th> Rank </th>';
+                initTable += '<th> Name </th>';
+                initTable += '<th> Surname </th>';
+                initTable += '<th> Country </th>';
+                initTable += '<th> Wins </th>';
+                initTable += '<th> Draws </th>';
+                initTable += '<th> Losses </th>';
+                initTable += '<th> Score </tr>';
+                initTable += '</tr>';
+                initTable += '</thead>';
+                initTable += '<tbody>';
+                initTable += analyzeFinalResults(c1);
+                initTable += '</tbody>';
+                initTable += '</table>';
+                initTable += '</div>';
+                initTable += '<div class="row">'
+                initTable += '<div class="col-lg-12 text-center">'
+                initTable += '<h3>End of the Tournament</h3>'
+                initTable += '<br>'
+                initTable += '<br>'
+                initTable += '<h3>Thank you for choosing us today</h3>'
+                initTable += '<br>'
+                initTable += '<br>'
+                initTable += '<h3>We salut you with the following quote... Hope to see you again soon!</h3>'
+
+                initTable += '<blockquote> <p>When I found that idea I simply couldn’t resist playing it. And look, people talk about me as a player who doesn’t care about beauty. That’s not true. It’s simply that during the game each person sees beauty in different things. I like the beauty of the endgame, but I also get pleasure from finding ideas like those against Grischuk. - (on his game vs. Grischuk at the Tal Memorial 2012)&nbsp; - &nbsp; Magnus Carlsen</p> </blockquote>'
+                initTable += '</div>';
+                initTable += '</div>';
+                initTable += '</div>';
+
+
+                $('#go_round_' + id).html('');
+
+                append_content_focus('#start_tournament', create_item_to_place(initTable), '#final_results')
+
+            }
+        });
+    }
 }
 
 

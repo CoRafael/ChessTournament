@@ -28,6 +28,7 @@ class Game(models.Model):
     chessPlayer1 = models.ForeignKey(ChessPlayer, related_name='Game.chess_player1', db_index=True)
     chessPlayer2 = models.ForeignKey(ChessPlayer, related_name='Game.chess_player2')
     round = models.IntegerField(default=-1, db_index=True)
+    active = models.BooleanField(default=True, db_index=True)
     result = models.FloatField(default=-1, db_index=True)
 
     def player_1(self):

@@ -14,6 +14,7 @@ from models import *
 
 
 
+
 # Create your views here.
 def index(request):
     Game.objects.all().delete()
@@ -49,7 +50,6 @@ def update_table(request):
 @login_required
 def finalize(request):
     if request.method == 'GET':
-
         chess_players = ChessPlayer.objects.all()
         expected_scores = {}
         for ch_player1 in chess_players:
@@ -185,7 +185,7 @@ def put_results(request):
         elif res == '0':
             go = 1
         Game.objects.get_or_create(chessPlayer1=updateRecord.chessPlayer2, chessPlayer2=updateRecord.chessPlayer1,
-                                   round=updateRecord.round, result=go)
+                                   round=updateRecord.round, result=go, active=False)
         return HttpResponse("Result saved successfully")
     else:
         return HttpResponse("Something went wrong. Please retry")
