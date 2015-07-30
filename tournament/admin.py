@@ -15,7 +15,7 @@ class CountryAdmin(admin.ModelAdmin):
 
 
 class GameAdmin(admin.ModelAdmin):
-    list_display = ('player_1', 'player_2', 'round', 'result')
+    list_display = ('player_1', 'player_2', 'round', 'result','active')
 
 
 admin.site.register(ChessPlayer, ChessPlayerAdmin)
