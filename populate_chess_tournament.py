@@ -20,7 +20,7 @@ def populate():
     Fabiano;Caruana;United States;2797
     Anish;Giri;Netherlands;2791
     Vladimir;Kramnik;Russia;2783
-    Wesley;So;United States;2780'''
+    Wesley;So;United States;10'''
 
     countryFile = open("countries.csv", "r")
     countries = countryFile.readlines()

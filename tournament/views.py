@@ -13,17 +13,6 @@ from models import *
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 # Create your views here.
 def index(request):
     Game.objects.all().delete()
@@ -70,7 +59,8 @@ def finalize(request):
                     final = 1 / (1 + temp2)
                     expected_scores[ch_player1.name + '_' +
                                     ch_player2.name] = final
-
+        toSend = list()
+        i = 1
         for ch_player in chess_players:
             all_games = Game.objects.all().filter(chessPlayer1=ch_player.id, result__gt=-1)
             real = 0
@@ -83,7 +73,25 @@ def finalize(request):
             final_elo_rating = ch_player.elo_rating + sub
             ch_player.elo_rating = int(final_elo_rating)
             ch_player.save()
-        return HttpResponse("success")
+            won = Game.objects.all().filter(chessPlayer1=ch_player.id, result=1)
+            draw = Game.objects.all().filter(chessPlayer1=ch_player.id, result=0.5)
+            loss = Game.objects.all().filter(chessPlayer1=ch_player.id, result=0)
+            toSendElement = {}
+            toSendElement['index'] = i
+            i+=1
+            toSendElement['name'] = ch_player.name
+            toSendElement['surname'] = ch_player.surname
+            toSendElement['country_name'] = ch_player.country_name()
+            toSendElement['elo_rating'] = ch_player.elo_rating
+            toSendElement['wins'] = len(won)
+            toSendElement['draws'] = len(draw)
+            toSendElement['losses'] = len(loss)
+            toSend.append(toSendElement)
+        context_to_send = {}
+        context_to_send['data'] = toSend
+        json_data = json.dumps(context_to_send)
+        print json_data
+        return HttpResponse(json_data, content_type="application/json")
     else:
         return HttpResponse("Something went wrong. Please retry")
 
@@ -94,7 +102,6 @@ def get_first_round(request):
         chess_players = ChessPlayer.objects.order_by('-elo_rating')
         toSend = ''
         for x in range(0, len(chess_players) / 2):
-            print chess_players[x].id
             getGame = Game.objects.get_or_create(chessPlayer1=chess_players[x],
                                                  chessPlayer2=chess_players[x + len(chess_players) / 2], round=1)[0]
             toSend += chess_players[x].surname + ' - ' + chess_players[x].country.abbreviation + ';' + chess_players[
@@ -207,7 +214,6 @@ def add_single_chess(request):
         elo_rating = request.POST.get('elo_rating')
         countryGet = Country.objects.get(name=country)
         c = ChessPlayer.objects.get_or_create(name=name, surname=surname, country=countryGet, elo_rating=elo_rating)
-        # print c
         return HttpResponse("Chess Player successfully created!")
     else:
         return HttpResponse("Something went wrong. Please retry")
@@ -273,3 +279,7 @@ def get_current_results():
     chess_players = ChessPlayer.objects.order_by('-elo_rating')
     context = {'titles_table': titles_table, 'chess_players': chess_players}
     return context
+
+
+
+

@@ -60,3 +60,33 @@ function place_result(id, result, who_won) {
         }
     });
 }
+
+
+function sortFunc(a, b) {
+    if (a.wins < b.wins)
+        return 1;
+    else if (a.wins > b.wins)
+        return -1;
+    //else if (a.wins == b.wins) {
+    //    if (a.elo_rating > b.elo_rating)
+    //        return 1;
+    //    else
+    //        return -1;
+    //}
+    //else if (a.draws = b.draws) {
+    //    if (a.losses < b.losses)
+    //        return 1;
+    //    else if (a.losses > b.losses)
+    //        return -1;
+    //    else {
+    //        if (a.elo_rating > b.elo_rating)
+    //            return 1;
+    //        else
+    //            return -1;
+    //    }
+    //}
+    //else if (a.draws > b.draws && a.losses < b.losses)
+    //    return 1;
+    //else if (a.draws < b.draws && a.losses > b.losses)
+    //    return -1;
+}

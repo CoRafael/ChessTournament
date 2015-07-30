@@ -142,9 +142,17 @@ function finalize() {
     $.ajax({
         type: 'GET',
         url: '/finalize/',
-        dataType: 'text',
+        dataType: "json",
         success: function (message) {
-            alert(message)
+            //var g = message.data.sort(function (a, b) {
+            //    return a.wins - b.wins || a.wins - b.wins;
+            //});
+            var chess_players = message.data
+            var c1 = chess_players.sort(sortFunc);
+
+            for (var i = 0; i < c1.length; i++) {
+                alert(c1[i].name + c1[i].wins)
+            }
         }
     });
 }

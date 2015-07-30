@@ -197,10 +197,8 @@ function parseSecondGroup() {
 
 
 
-
-
 function create_button_result(player_1, player_2, user1, user2, id) {
-    var button = ''
+    var button = '<br>'
     button += '<div class="btn-group">'
     button += ' <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="button_' + id + '">'
     button += 'Save Result <span class="caret"></span>'
