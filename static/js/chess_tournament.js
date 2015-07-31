@@ -6,6 +6,7 @@ $(document).ready(function () {
     jQuery.support.cors = true;
     $('#intupdatealert').hide();
     $('#second_alert').hide()
+    $('#errorNotice').hide()
 
 
 });
@@ -59,7 +60,7 @@ $('#proceed_tournament').click(function (e) {
             //}, 1000);
         }
         else {
-            print_alert_message("Come on! Only one chess titan left to be placed!")
+            print_danger_message("Come on! Only one chess titan left to be placed!")
         }
 
     }

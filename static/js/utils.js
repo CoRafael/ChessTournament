@@ -12,6 +12,14 @@ function print_alert_message(message) {
     }, 3000);
 }
 
+
+function print_danger_message(message) {
+    $('#errorNotice').html(message).show(400);
+    setTimeout(function () {
+        $('#errorNotice').hide(400)
+    }, 3000);
+}
+
 function print_second_alert_message(message) {
     $('#second_alert').html(message).show(400);
     setTimeout(function () {
