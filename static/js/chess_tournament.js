@@ -18,30 +18,53 @@ $('#refresh_button').click(function (e) {
 
 
 $('#proceed_tournament').click(function (e) {
-    e.preventDefault();
-    $('#label_start_tournament').html("Tournament Progress");
-    $('#tournament_title').html("Tournament Progress");
-    $('#inputName').prop("readonly", true);
-    $('#inputSurname').prop("readonly", true);
-    $('#inputEloRating').prop("readonly", true);
-    $('#register_button').remove();
-    $('#upload_file').remove();
-    if (!$('#add_enter').length) {
-        var toAddEnter = '<div class="alert alert-warning" role="alert" id="add_enter">Sorry but the tournament has started. No more chess players can be added </div>';
-        $('#create_chess_player').append(toAddEnter)
+
+        var toGo = true
+        $.ajax({
+                type: 'GET',
+                url: '/get_num_users/',
+                dataType: 'text',
+                async: false,
+                success: function (message) {
+                    if (parseInt(message) != 8) {
+                        toGo = false
+                    }
+                }
+            }
+        )
+
+        if (toGo == true) {
+            e.preventDefault();
+            $('#label_start_tournament').html("Tournament Progress");
+            $('#tournament_title').html("Tournament Progress");
+            $('#inputName').prop("readonly", true);
+            $('#inputSurname').prop("readonly", true);
+            $('#inputEloRating').prop("readonly", true);
+            $('#register_button').remove();
+            $('#upload_file').remove();
+            if (!$('#add_enter').length) {
+                var toAddEnter = '<div class="alert alert-warning" role="alert" id="add_enter">Sorry but the tournament has started. No more chess players can be added </div>';
+                $('#create_chess_player').append(toAddEnter)
+            }
+            if (!$('#add_upload').length) {
+                var toAddUpload = '<div class="alert alert-warning" role="alert" id="add_upload">Yes, no .csv files are allowed as well. Observe the leaderboard. Feel the vibe  </div>';
+                $('#upload_multiple').append(toAddUpload)
+            }
+            $('#preliminary_text').fadeOut();
+            getLeaderBoard();
+            //var item = $('<div class="alert alert-warning" role="alert" id="add_enter">Sorry but the tournament has started. No more chess players can be added </div>').hide().fadeIn(2000);
+            //$('#start_tournament').append(getData);
+            //$('html, body').animate({
+            //    scrollTop: $("#enter_participants").offset().top
+            //}, 1000);
+        }
+        else {
+            print_alert_message("Come on! Only one chess titan left to be placed!")
+        }
+
     }
-    if (!$('#add_upload').length) {
-        var toAddUpload = '<div class="alert alert-warning" role="alert" id="add_upload">Yes, no .csv files are allowed as well. Observe the leaderboard. Feel the vibe  </div>';
-        $('#upload_multiple').append(toAddUpload)
-    }
-    $('#preliminary_text').fadeOut();
-    getLeaderBoard();
-    //var item = $('<div class="alert alert-warning" role="alert" id="add_enter">Sorry but the tournament has started. No more chess players can be added </div>').hide().fadeIn(2000);
-    //$('#start_tournament').append(getData);
-    //$('html, body').animate({
-    //    scrollTop: $("#enter_participants").offset().top
-    //}, 1000);
-});
+)
+;
 
 
 function create_button_next_round(which) {
@@ -57,6 +80,25 @@ function getLeaderBoardRowsToAdd(message) {
     var all_players = $.parseJSON(test);//parse
     var content = '';
     content += '<tbody>';
+
+
+    if (all_players.length == 8) {
+        $('#inputName').prop("readonly", true);
+        $('#inputSurname').prop("readonly", true);
+        $('#inputEloRating').prop("readonly", true);
+        $('#register_button').remove();
+        $('#upload_file').remove();
+        if (!$('#add_enter').length) {
+            var toAddEnter = '<div class="alert alert-warning" role="alert" id="add_enter">Sorry! No more chess players can be added. Max Number is 8</div>';
+            $('#create_chess_player').append(toAddEnter)
+        }
+        if (!$('#add_upload').length) {
+            var toAddUpload = '<div class="alert alert-warning" role="alert" id="add_upload">Yes, no .csv files are allowed as well. Observe the leaderboard. Feel the vibe  </div>';
+            $('#upload_multiple').append(toAddUpload)
+        }
+    }
+
+
     for (var i in all_players) {
         content += '<tr' + '">';
         var fields = all_players[i].fields;
@@ -122,67 +164,61 @@ function getLeaderBoard() {
 }
 
 function getUpdatedTournament(id) {
-
     id += 1
-    var proceed = true
-    if (proceed == true) {
+    $.ajax({
+        type: 'GET',
+        url: '/temp_finalize/',
+        dataType: "json",
+        async: false,
+        success: function (message) {
+            var chess_players = message.data
+            var c1 = chess_players.sort(sortFunc);
+            var initTable = '';
+            initTable += '<div class=\"container\">';
+            initTable += '<div class="row">'
+            initTable += '<div class="col-lg-12 text-center" id="final_results">'
+            initTable += '<br>'
+            initTable += '<h2>Final Tournament Results</h2>'
+            initTable += '<hr class="star-primary">'
+            initTable += '</div>'
+            initTable += '</div>'
+            initTable += '<div class=\"panel-body panel-refresh\">';
+            initTable += '<table class=\"table table-striped\" id=\"leaderboard_to_add\">';
+            initTable += '<thead>';
+            initTable += '<tr>';
+            initTable += '<th> Rank </th>';
+            initTable += '<th> Name </th>';
+            initTable += '<th> Surname </th>';
+            initTable += '<th> Country </th>';
+            initTable += '<th> Wins </th>';
+            initTable += '<th> Draws </th>';
+            initTable += '<th> Losses </th>';
+            initTable += '<th> Score </tr>';
+            initTable += '</tr>';
+            initTable += '</thead>';
+            initTable += '<tbody>';
+            initTable += analyzeFinalResults(c1);
+            initTable += '</tbody>';
+            initTable += '</table>';
+            initTable += '</div>';
+            initTable += '<div class="row">'
+            initTable += '<div class="col-lg-12 text-center">'
+            initTable += '<h3>End of the Tournament</h3>'
+            initTable += '<br>'
+            initTable += '<br>'
+            initTable += '<h3>Thank you for choosing us today</h3>'
+            initTable += '<br>'
+            initTable += '<br>'
+            initTable += '<h3>We salut you with the following quote... Hope to see you again soon!</h3>'
 
+            initTable += '<blockquote> <p>When I found that idea I simply couldn’t resist playing it. And look, people talk about me as a player who doesn’t care about beauty. That’s not true. It’s simply that during the game each person sees beauty in different things. I like the beauty of the endgame, but I also get pleasure from finding ideas like those against Grischuk. - (on his game vs. Grischuk at the Tal Memorial 2012)&nbsp; - &nbsp; Magnus Carlsen</p> </blockquote>'
+            initTable += '</div>';
+            initTable += '</div>';
+            initTable += '</div>';
+            replace_content('#telos', create_item_to_place(initTable), '#final_results')
 
-        $.ajax({
-            type: 'GET',
-            url: '/temp_finalize/',
-            dataType: "json",
-            async: false,
-            success: function (message) {
-                var chess_players = message.data
-                var c1 = chess_players.sort(sortFunc);
-                var initTable = '';
-                initTable += '<div class=\"container\">';
-                initTable += '<div class="row">'
-                initTable += '<div class="col-lg-12 text-center" id="final_results">'
-                initTable += '<br>'
-                initTable += '<h2>Final Tournament Results</h2>'
-                initTable += '<hr class="star-primary">'
-                initTable += '</div>'
-                initTable += '</div>'
-                initTable += '<div class=\"panel-body panel-refresh\">';
-                initTable += '<table class=\"table table-striped\" id=\"leaderboard_to_add\">';
-                initTable += '<thead>';
-                initTable += '<tr>';
-                initTable += '<th> Rank </th>';
-                initTable += '<th> Name </th>';
-                initTable += '<th> Surname </th>';
-                initTable += '<th> Country </th>';
-                initTable += '<th> Wins </th>';
-                initTable += '<th> Draws </th>';
-                initTable += '<th> Losses </th>';
-                initTable += '<th> Score </tr>';
-                initTable += '</tr>';
-                initTable += '</thead>';
-                initTable += '<tbody>';
-                initTable += analyzeFinalResults(c1);
-                initTable += '</tbody>';
-                initTable += '</table>';
-                initTable += '</div>';
-                initTable += '<div class="row">'
-                initTable += '<div class="col-lg-12 text-center">'
-                initTable += '<h3>End of the Tournament</h3>'
-                initTable += '<br>'
-                initTable += '<br>'
-                initTable += '<h3>Thank you for choosing us today</h3>'
-                initTable += '<br>'
-                initTable += '<br>'
-                initTable += '<h3>We salut you with the following quote... Hope to see you again soon!</h3>'
-
-                initTable += '<blockquote> <p>When I found that idea I simply couldn’t resist playing it. And look, people talk about me as a player who doesn’t care about beauty. That’s not true. It’s simply that during the game each person sees beauty in different things. I like the beauty of the endgame, but I also get pleasure from finding ideas like those against Grischuk. - (on his game vs. Grischuk at the Tal Memorial 2012)&nbsp; - &nbsp; Magnus Carlsen</p> </blockquote>'
-                initTable += '</div>';
-                initTable += '</div>';
-                initTable += '</div>';
-                replace_content('#telos', create_item_to_place(initTable), '#final_results')
-
-            }
-        });
-    }
+        }
+    });
 }
 
 

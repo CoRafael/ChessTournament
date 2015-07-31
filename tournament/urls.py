@@ -19,6 +19,7 @@ urlpatterns = patterns('',
                        url(r'^get_next_round/$', views.get_next_round, name='get_next_round'),
                        url(r'^finalize/$', views.finalize, name='finalize'),
                        url(r'^temp_finalize/$', views.temp_finalize, name='temp_finalize'),
+                       url(r'^get_num_users/$', views.get_num_users, name='get_num_users'),
                        url(r'^user_authenticate/$', views.user_authenticate, name='user_authenticate'),
 )
 

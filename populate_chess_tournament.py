@@ -10,7 +10,6 @@ from tournament.models import *
 
 
 def populate():
-
     User.objects._create_user('admin', 'a@a.a', 'admin', True, True)
 
     userData = '''Magnus;Carlsen;Norway;2853
@@ -19,8 +18,7 @@ def populate():
     Hikaru;Nakamura;United States;2814
     Fabiano;Caruana;United States;2797
     Anish;Giri;Netherlands;2791
-    Vladimir;Kramnik;Russia;2783
-    Wesley;So;United States;10'''
+    Vladimir;Kramnik;Russia;2783'''
 
     countryFile = open("countries.csv", "r")
     countries = countryFile.readlines()
@@ -29,7 +27,7 @@ def populate():
 
     for line in countries:
         toSplit = line.split(',')
-        Country.objects.get_or_create(name=toSplit[0].replace("\"",""), abbreviation=toSplit[3])
+        Country.objects.get_or_create(name=toSplit[0].replace("\"", ""), abbreviation=toSplit[3])
 
     print 'Creating Chess Participants...'
 
@@ -37,7 +35,6 @@ def populate():
         f = x.split(';')
         country = Country.objects.get(name=f[2])
         ChessPlayer.objects.get_or_create(name=f[0], surname=f[1], country=country, elo_rating=f[3])
-
 
 
 if __name__ == '__main__':

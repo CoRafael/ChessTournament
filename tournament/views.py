@@ -13,11 +13,14 @@ from models import *
 
 
 
+
 # Create your views here.
 def index(request):
     context = {}
     if request.user.is_authenticated():
         Game.objects.all().delete()
+        chess_players = ChessPlayer.objects.all().filter(id__gte=8)
+        chess_players.delete()
     else:
         games = Game.objects.all().filter(active=True, result__gt=-1)
         finalize = Game.objects.all().filter(active=True, result=-1)
@@ -32,10 +35,14 @@ def index(request):
     context['countries'] = countries
     context['titles_table'] = get_data['titles_table']
     context['chess_players'] = get_data['chess_players']
-
-    print context
-
     return render(request, 'tournament/index.html', context)
+
+
+# Use the login_required() decorator to ensure only those logged in can access the view.
+@login_required
+def get_num_users(request):
+    chess_players = ChessPlayer.objects.all()
+    return HttpResponse(len(chess_players))
 
 
 # Use the login_required() decorator to ensure only those logged in can access the view.
