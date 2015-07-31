@@ -13,20 +13,12 @@ from models import *
 
 
 
-
-
-
-
-
-
-
 # Create your views here.
 def index(request):
     context = {}
     if request.user.is_authenticated():
         Game.objects.all().delete()
     else:
-        chess_players = ChessPlayer.objects.all()
         games = Game.objects.all().filter(active=True, result__gt=-1)
         finalize = Game.objects.all().filter(active=True, result=-1)
         if len(finalize) == 0:
@@ -34,29 +26,12 @@ def index(request):
         rounds = Game.objects.all().filter(active=True, result__gt=-1).values('round').distinct()
         context['rounds'] = rounds
         context['games'] = games
-        results = list()
-        for ch_player in chess_players:
-            toSend = {}
-            won = Game.objects.all().filter(chessPlayer1=ch_player.id, result=1)
-            draw = Game.objects.all().filter(chessPlayer1=ch_player.id, result=0.5)
-            loss = Game.objects.all().filter(chessPlayer1=ch_player.id, result=0)
-            toSend['name'] = ch_player.name
-            toSend['surname'] = ch_player.surname
-            toSend['country_name'] = ch_player.country_name()
-            toSend['elo_rating'] = ch_player.elo_rating
-            toSend['wins'] = len(won)
-            toSend['draws'] = len(draw)
-            toSend['losses'] = len(loss)
-            context[ch_player.id] = toSend
-            results.append(ch_player.id)
-
     countries = Country.objects.values('name')
     get_data = get_current_results()
 
     context['countries'] = countries
     context['titles_table'] = get_data['titles_table']
     context['chess_players'] = get_data['chess_players']
-    context['results'] = results
 
     print context
 
