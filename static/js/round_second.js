@@ -84,7 +84,6 @@ function create_line_to_append(where, what) {
         //middle Column with the vs word
         round1 += '<div class="col-sm-3 text-center pagination-centered center-block">'
         round1 += '<br>'
-
         round1 += '<h4>Vs</h4>';
         round1 += '</div>' // end of middle Column with the vs word
         //second Column with the second group

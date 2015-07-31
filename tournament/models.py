@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 
 class Country(models.Model):
-    name = models.CharField(max_length=100, primary_key=True)
+    name = models.CharField(max_length=100, primary_key=True, db_index=True)
     abbreviation = models.CharField(max_length=5)
 
 

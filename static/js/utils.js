@@ -2,6 +2,9 @@
  * Created by rafael on 7/27/15.
  */
 
+
+
+
 function print_alert_message(message) {
     $('#intupdatealert').html(message).show(400);
     setTimeout(function () {

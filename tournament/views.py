@@ -15,15 +15,31 @@ from models import *
 
 
 
+
+
 # Create your views here.
 def index(request):
-    Game.objects.all().delete()
+    context = {}
+    if request.user.is_authenticated():
+        Game.objects.all().delete()
+    else:
+        games = Game.objects.all().filter(active=True, result__gt=-1)
+        rounds = Game.objects.all().filter(active=True, result__gt=-1).values('round').distinct()
+        context['rounds'] = rounds
+        context['games'] = games
+
     countries = Country.objects.values('name')
-    titles_table = ["Rank", "Name", "Surname", "Country", "Score"]
-    chess_players = ChessPlayer.objects.order_by('-elo_rating')
     get_data = get_current_results()
-    return render(request, 'tournament/index.html', {'countries': countries, 'titles_table': get_data['titles_table'],
-                                                     'chess_players': get_data['chess_players']})
+
+    context['countries'] = countries
+    context['titles_table'] = get_data['titles_table']
+    context['chess_players'] = get_data['chess_players']
+
+    context['test_1'] = 'helooooo'
+
+    print context
+
+    return render(request, 'tournament/index.html', context)
 
 
 # Use the login_required() decorator to ensure only those logged in can access the view.
@@ -264,7 +280,48 @@ def user_login(request):
         else:
             # Bad login details were provided. So we can't log the user in.
             print "Invalid login details: {0}, {1}".format(username, password)
-            return HttpResponse("Invalid login details supplied.")
+            # return HttpResponse("Invalid login details supplied.")
+            return HttpResponseRedirect('/')
+    # The request is not a HTTP POST, so display the login form.
+    # This scenario would most likely be a HTTP GET.
+    else:
+        # No context variables to pass to the template system, hence the
+        # blank dictionary object...
+        return HttpResponseRedirect('/')
+
+
+def user_authenticate(request):
+    # If the request is a HTTP POST, try to pull out the relevant information.
+    if request.method == 'POST':
+        # Gather the username and password provided by the user.
+        # This information is obtained from the login form.
+        # We use request.POST.get('<variable>') as opposed to request.POST['<variable>'],
+        # because the request.POST.get('<variable>') returns None, if the value does not exist,
+        # while the request.POST['<variable>'] will raise key error exception
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        # Use Django's machinery to attempt to see if the username/password
+        # combination is valid - a User object is returned if it is.
+        user = authenticate(username=username, password=password)
+
+        # If we have a User object, the details are correct.
+        # If None (Python's way of representing the absence of a value), no user
+        # with matching credentials was found.
+        if user:
+            # Is the account active? It could have been disabled.
+            if user.is_active:
+                # If the account is valid and active, we can log the user in.
+                # We'll send the user back to the homepage.
+                login(request, user)
+                return HttpResponse("True")
+            else:
+                # An inactive account was used - no logging in!
+                return HttpResponse("This is an inactive admin user. Contact support")
+        else:
+            # Bad login details were provided. So we can't log the user in.
+            print "Invalid login details: {0}, {1}".format(username, password)
+            return HttpResponse("Invalid login details")
 
     # The request is not a HTTP POST, so display the login form.
     # This scenario would most likely be a HTTP GET.

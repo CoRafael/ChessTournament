@@ -12,3 +12,16 @@ $('#create_chess_player').on('submit', function (event) {
     print_second_alert_message("Chess Player has been registered successfully");
     refresh()
 });
+
+
+function refresh() {
+    $.ajax({
+        type: 'GET',
+        url: '/update_table/',
+        dataType: 'text',
+        success: function (message) {
+            $('#table_results tbody').replaceWith(getLeaderBoardRowsToAdd(message));
+            print_alert_message("The League has been updated")
+        }
+    });
+}

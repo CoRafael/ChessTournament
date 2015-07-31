@@ -77,6 +77,14 @@
                     <a href="#start_tournament" id="label_start_tournament">Start Tournament</a>
                 </li>
 
+
+                {% if user.is_authenticated == False %}
+                    <li class="page-scroll">
+                        <a href="#results_so_far" id="label_results_so_far">Results So Far</a>
+                    </li>
+                {% endif %}
+
+
                 {% if user.is_authenticated == False %}
 
                     <ul class="nav navbar-nav navbar-right">
@@ -88,16 +96,16 @@
                                 <li>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <form class="form" role="form" action="/login/" method="post"
+                                            <form class="form" role="form" method="post" action="/login/"
                                                   accept-charset="UTF-8" id="login-nav">
                                                 {% csrf_token %}
                                                 <div class="form-group">
-                                                    <input type="username" class="form-control" id="malakas"
+                                                    <input type="username" class="form-control" id="id_username"
                                                            name="username" placeholder="Username" autocomplete="off"
                                                            required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <input type="password" class="form-control" id="exampleInputEmail"
+                                                    <input type="password" class="form-control" id="id_password"
                                                            name="password" placeholder="Password" autocomplete="off"
                                                            required>
                                                 </div>
@@ -123,7 +131,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <form class="form" role="form" action="/logout/" method="post"
-                                                  accept-charset="UTF-8" id="login-nav">
+                                                  accept-charset="UTF-8" id="logout-nav">
                                                 {% csrf_token %}
 
                                                 <button class="btn btn-primary btn-block login_logout" type="submit">
@@ -363,6 +371,95 @@
         </div>
     </div>
 </section>
+
+{% if user.is_authenticated == False %}
+    <section id="results_so_far">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 id="tournament_title">Results So Far</h2>
+                    <hr class="star-primary">
+                </div>
+
+                <div class="row col-lg-12 text-center" id="results_so_far_inner">
+
+                    {% if rounds %}
+                        {% for round_item in rounds %}
+                            <div class=\"container\">
+                                <div class="row text-center">
+                                    <h1>Round {{ round_item.round }}</h1>
+
+                                    <h3>Games of Round {{ round_item.round }}</h3>
+
+                                    {% for game in games %}
+                                        {% if game.round == round_item.round %}
+                                            <div class="row">
+                                                <div class="col-sm-3 text-center pagination-centered center-block">
+
+                                                    <img src="{% static "images/knight_black.jpg" %}" width="50"
+                                                         height="50" alt="SomeImage"/>
+
+                                                    <h4>{{ game.chessPlayer1.name }}-{{ game.chessPlayer1.country_abbreviation }}</h4>
+                                                </div>
+
+                                                <div id="vs"
+                                                     class="col-sm-3 text-center pagination-centered center-block">
+                                                    <br>
+                                                    <h4>Vs</h4>
+                                                </div>
+
+                                                <div class="col-sm-3 text-center pagination-centered center-block">
+                                                    <img src="{% static "images/knight_white.jpg" %}" width="50"
+                                                         height="50" alt="SomeImage"/>
+                                                    <h4>{{ game.chessPlayer2.name }}-{{ game.chessPlayer2.country_abbreviation }}</h4>
+                                                </div>
+
+
+                                                <div class="col-sm-3 text-center pagination-centered center-block">
+                                                    {% if game.result == 1 %}
+                                                        <div class="alert alert-warning"
+                                                             role="alert">{{ game.chessPlayer1.name }}-{{ game.chessPlayer1.country_abbreviation }}
+                                                            Won
+                                                        </div>
+                                                    {% elif game.result == 0 %}
+                                                        <div class="alert alert-warning"
+                                                             role="alert">{{ game.chessPlayer1.name }}-{{ game.chessPlayer2.country_abbreviation }}
+                                                            Won
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="alert alert-warning"
+                                                             role="alert">Draw
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+
+
+                                    <div class="row text-center">
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+
+                    {% else %}
+                        <h1>&#9785</h1>
+                        <h3>No Results Have been recorded so far... Reload! You never know what happens!</h3>
+                    {% endif %}
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+{% endif %}
+
 
 
 <!-- Footer -->

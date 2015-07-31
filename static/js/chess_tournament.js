@@ -121,17 +121,6 @@ function getLeaderBoard() {
     return result;
 }
 
-function refresh() {
-    $.ajax({
-        type: 'GET',
-        url: '/update_table/',
-        dataType: 'text',
-        success: function (message) {
-            $('#table_results tbody').replaceWith(getLeaderBoardRowsToAdd(message));
-            print_alert_message("The League has been updated")
-        }
-    });
-}
 
 function finalize(id) {
 
