@@ -17,16 +17,38 @@ from models import *
 
 
 
+
+
+
 # Create your views here.
 def index(request):
     context = {}
     if request.user.is_authenticated():
         Game.objects.all().delete()
     else:
+        chess_players = ChessPlayer.objects.all()
         games = Game.objects.all().filter(active=True, result__gt=-1)
+        finalize = Game.objects.all().filter(active=True, result=-1)
+        if len(finalize) == 0:
+            context['finalize'] = True
         rounds = Game.objects.all().filter(active=True, result__gt=-1).values('round').distinct()
         context['rounds'] = rounds
         context['games'] = games
+        results = list()
+        for ch_player in chess_players:
+            toSend = {}
+            won = Game.objects.all().filter(chessPlayer1=ch_player.id, result=1)
+            draw = Game.objects.all().filter(chessPlayer1=ch_player.id, result=0.5)
+            loss = Game.objects.all().filter(chessPlayer1=ch_player.id, result=0)
+            toSend['name'] = ch_player.name
+            toSend['surname'] = ch_player.surname
+            toSend['country_name'] = ch_player.country_name()
+            toSend['elo_rating'] = ch_player.elo_rating
+            toSend['wins'] = len(won)
+            toSend['draws'] = len(draw)
+            toSend['losses'] = len(loss)
+            context[ch_player.id] = toSend
+            results.append(ch_player.id)
 
     countries = Country.objects.values('name')
     get_data = get_current_results()
@@ -34,8 +56,7 @@ def index(request):
     context['countries'] = countries
     context['titles_table'] = get_data['titles_table']
     context['chess_players'] = get_data['chess_players']
-
-    context['test_1'] = 'helooooo'
+    context['results'] = results
 
     print context
 
@@ -59,6 +80,44 @@ def update_table(request):
         data = serializers.serialize("json", chess_players)
         get_data['chess_players'] = data
         return HttpResponse(json.dumps(get_data), content_type="application/json")
+    else:
+        return HttpResponse("Something went wrong. Please retry")
+
+
+def temp_finalize(request):
+    if request.method == 'GET':
+        chess_players = ChessPlayer.objects.all()
+        expected_scores = {}
+        for ch_player1 in chess_players:
+            for ch_player2 in chess_players:
+                if ch_player1.id != ch_player2.id:
+                    temp1 = (ch_player2.elo_rating - ch_player1.elo_rating) / 400.0
+                    temp2 = 10 ** temp1
+                    final = 1 / (1 + temp2)
+                    expected_scores[ch_player1.name + '_' +
+                                    ch_player2.name] = final
+        toSend = list()
+        i = 1
+        for ch_player in chess_players:
+            all_games = Game.objects.all().filter(chessPlayer1=ch_player.id, result__gt=-1)
+            won = Game.objects.all().filter(chessPlayer1=ch_player.id, result=1)
+            draw = Game.objects.all().filter(chessPlayer1=ch_player.id, result=0.5)
+            loss = Game.objects.all().filter(chessPlayer1=ch_player.id, result=0)
+            toSendElement = {}
+            toSendElement['index'] = i
+            i += 1
+            toSendElement['name'] = ch_player.name
+            toSendElement['surname'] = ch_player.surname
+            toSendElement['country_name'] = ch_player.country_name()
+            toSendElement['elo_rating'] = ch_player.elo_rating
+            toSendElement['wins'] = len(won)
+            toSendElement['draws'] = len(draw)
+            toSendElement['losses'] = len(loss)
+            toSend.append(toSendElement)
+        context_to_send = {}
+        context_to_send['data'] = toSend
+        json_data = json.dumps(context_to_send)
+        return HttpResponse(json_data, content_type="application/json")
     else:
         return HttpResponse("Something went wrong. Please retry")
 

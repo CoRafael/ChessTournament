@@ -436,12 +436,58 @@
                                         {% endif %}
                                     {% endfor %}
 
-
-                                    <div class="row text-center">
-                                    </div>
                                 </div>
                             </div>
                         {% endfor %}
+
+
+                        {% if finalize %}
+                            <div class="row" id="telos">
+                                <div class="col-lg-12 text-center">
+                                    <h3>End of the Tournament</h3>
+                                    <br>
+                                    <br>
+
+                                    <h3>Thank you for choosing us today</h3>
+                                    <br>
+                                    <br>
+
+                                    <h3>Updated Results are shown on the Leaderboard</h3>
+                                    <br>
+                                    <br>
+
+                                    {% if results %}
+                                        <button type="submit" class="btn btn-primary login_logout"
+                                                onclick="getUpdatedTournament({{ results|length }})">Tournament Statistics
+                                        </button>
+                                    {% endif %}
+                                    <br>
+
+                                    <h3>We salut you with the following quote... Hope to see you again
+                                        soon!</h3>
+
+                                    <blockquote><p>When I found that idea I simply couldn’t resist playing it. And look,
+                                        people talk about me as a player who doesn’t care about beauty. That’s not true.
+                                        It’s simply that during the game each person sees beauty in different things. I
+                                        like the beauty of the endgame, but I also get pleasure from finding ideas like
+                                        those against Grischuk. - (on his game vs. Grischuk at the Tal Memorial 2012)&nbsp;
+                                        - &nbsp; Magnus Carlsen</p></blockquote>
+                                </div>
+                            </div>
+                        {% else %}
+
+                            <div class="col-lg-12 text-center">
+                                <h3>Do you feel the tension??</h3>
+                                <br>
+                                <br>
+
+                                <h3>Refresh to stay up to date!</h3>
+                                <br>
+                                <br>
+
+                            </div>
+                        {% endif %}
+
                     {% else %}
                         <h1>&#9785</h1>
                         <h3>No Results Have been recorded so far... Reload! You never know what happens!</h3>
