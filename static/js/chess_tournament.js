@@ -7,6 +7,8 @@ $(document).ready(function () {
     $('#intupdatealert').hide();
     $('#second_alert').hide()
     $('#errorNotice').hide()
+
+
 });
 
 $('#refresh_button').click(function (e) {
