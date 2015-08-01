@@ -25,6 +25,13 @@
     background-color: #33ADFF !important;
 }
 
+.end_tournament_button {
+    /*background-color: #2c3e50 !important;*/
+    background-color: #c0c0c0 !important;
+}
+
+
+
 .start_tournament {
     background-color: #2c3e50 !important;
 }

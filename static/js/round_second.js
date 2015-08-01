@@ -45,7 +45,7 @@ function prepare_round(id) {
     buttonToAdd += '<br>'
     buttonToAdd += '<br>'
     buttonToAdd += '<div class="row" id="end_tournament">'
-    buttonToAdd += '<button type="submit" class="btn btn-primary login_logout" onclick="finalize(' + id + ')">End this Tournament</button>'
+    buttonToAdd += '<button type="submit" class="btn end_tournament_button" onclick="finalize(' + id + ')">End this Tournament</button>'
     buttonToAdd += '</div>'
     append_content('#go_round_' + id, create_item_to_place(buttonToAdd))
 

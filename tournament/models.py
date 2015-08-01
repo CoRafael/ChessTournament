@@ -23,7 +23,6 @@ class ChessPlayer(models.Model):
         return self.country.abbreviation
 
 
-# , db_index=True
 class Game(models.Model):
     chessPlayer1 = models.ForeignKey(ChessPlayer, related_name='Game.chess_player1', db_index=True)
     chessPlayer2 = models.ForeignKey(ChessPlayer, related_name='Game.chess_player2')
@@ -36,3 +35,6 @@ class Game(models.Model):
 
     def player_2(self):
         return self.chessPlayer2.name + ' ' + self.chessPlayer2.surname
+
+
+
