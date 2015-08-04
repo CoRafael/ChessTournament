@@ -25,11 +25,12 @@ Temp_Path = os.path.realpath('.')
 SECRET_KEY = '-j+5-gbr1x_k^30qv0j5^lvmo^423rnxxht51y65)a*b&yon^n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'http://corafael.pythonanywhere.com/']
+ALLOWED_HOSTS = []
+
 
 # Application definition
 
